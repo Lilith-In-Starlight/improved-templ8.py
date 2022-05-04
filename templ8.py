@@ -206,6 +206,7 @@ def help():
 help        Display this list.
 genesis     Create a new templ8 page.
 divine      Build a templ8 page.
+radio       Build a blog page in output/blog
 """)  
 
 if __name__ == "__main__":    
