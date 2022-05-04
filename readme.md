@@ -16,8 +16,8 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [x] Basic templating functionality like templ8.0's
 - [x] Easier-to-customize replacement tags
 - [x] Copy non-markup files from the input folder into the output
-- [ ] txignore file for textile files that should be put on the output folder unprocessed
-- [X] Customizing "core" file and directory names of a project
+- [x] txignore file for textile files that should be put on the output folder unprocessed
+- [x] Customizing "core" file and directory names of a project
 - [ ] Change a specific page's basehtml
 - [ ] Markdown support (with mdignore)
 - [ ] IFKEYs for further basetemplate flexibility
@@ -123,6 +123,9 @@ output=your_output_folder
 replace=your_replace_file
 basehtml=your_basehtml_file
 ```
+
+#### txignore
+txignore files are like .gitignore files, except they don't mean "don't put this file on the ouput," it's more like "output the raw file." Putting a path to a directory in txignore will be non-recursive, and child directories will not be ignored.
 
 
 ## Versioning

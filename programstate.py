@@ -8,16 +8,17 @@ def makedir(path, warning = ""):
 
 
 class ProgramState:
-    deity_path = "d8y"
     def __init__(self):
-        self.deity_path = "d8y"
-        self.basehtml_path = "basehtml"
-        self.replacements_path = "repl8ce"
+        self.deity_path = r"d8y"
+        self.basehtml_path = r"basehtml"
+        self.replacements_path = r"repl8ce"
+        self.txignore_path = r"txignore"
         self.replacements = {}
 
-        self.input_folder = "input"
-        self.output_folder = "output"
+        self.input_folder = r"input"
+        self.output_folder = r"output"
         
+        # Load d8y
         if not os.path.exists(self.deity_path):
             raise Exception("No " + self.deity_path + " file found")
         
@@ -35,13 +36,16 @@ class ProgramState:
                     self.replacements_path = keyval[1]
                 elif keyval[0] == "basehtml" and keyval[1].isidentifier():
                     self.basehtml_path = keyval[1]
+                elif keyval[0] == "txignore" and keyval[1].isidentifier():
+                    self.txignore_path = keyval[1]
 
         if not os.path.exists(self.basehtml_path):
             raise Exception("No" + self.basehtml_path + "file found")
 
         self.basehtml_content = open(self.basehtml_path, "r").read()
 
-
+        
+        # Make input and output folder if they don't yet exist
         makedir(self.input_folder, "No input directory found, creating one")
         makedir(self.output_folder, "No output directory found, creating one")
 
@@ -59,3 +63,11 @@ class ProgramState:
                         raise Exception("More than one value assignments on a replace key")
         else:
             print("WARNING: No " + self.replacements_path + " file found, continuing")
+        
+        
+        self.input_folder = os.path.normpath(self.input_folder)
+        self.input_folder = os.path.normpath(self.input_folder)
+
+        
+        # Load txignore
+        self.txignore = open(self.txignore_path, "r").readlines()

@@ -45,8 +45,8 @@ def divine():
             outpath = path.replace(state.input_folder, state.output_folder, 1)
             outhtml = outpath.replace(".textile", ".html", -1)
             if path.endswith(".textile"):
-                contents = ""
                 with open(path, "r") as f:
+                    contents = ""
                     file_split = f.read().split("-BEGINFILE-")
                     file_headers = ""
                     file_content = ""
@@ -58,22 +58,35 @@ def divine():
                         file_content = file_split[0]
                     else:
                         raise Exception("More than one -BEGINFILE- markers")
-                    contents = textile.textile(file_content)
-                    contents = state.basehtml_content.replace("##CONTENT##", contents)
                     
-                    filerepl = state.replacements.copy()
-                    for replace in file_headers.split("\n"):
-                        if replace != "":
-                            keyval = replace.split("=")
-                            filerepl[keyval[0]] = keyval[1]
+                    # Check if the folder is in txignore
+                    in_txignore = False
+                    for i in state.txignore:
+                        if os.path.join(state.input_folder, os.path.normpath(i)) == path or os.path.join(state.input_folder, os.path.normpath(i)) == subdir:
+                            in_txignore = True
+                            break
+                          
                     
-                    for key in filerepl:
-                        contents = contents.replace("##"+key+"##", filerepl[key])
+                    if not in_txignore:
+                        contents = textile.textile(file_content)
+                        contents = state.basehtml_content.replace("##CONTENT##", contents)
+                        
+                        filerepl = state.replacements.copy()
+                        for replace in file_headers.split("\n"):
+                            if replace != "":
+                                keyval = replace.split("=")
+                                filerepl[keyval[0]] = keyval[1]
+                        
+                        for key in filerepl:
+                            contents = contents.replace("##"+key+"##", filerepl[key])
+                            
+                        with open(outhtml, "w") as f:
+                            f.write(contents)
+                    else:
+                        with open(outpath, "w") as f:
+                            f.write(file_content)
                     
                     
-                   
-                with open(outhtml, "w") as f:
-                    f.write(contents)
                     
             elif not os.path.exists(outpath):
                 shutil.copy(path, outpath)
