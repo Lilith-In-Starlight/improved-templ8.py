@@ -70,4 +70,6 @@ class ProgramState:
 
         
         # Load txignore
-        self.txignore = open(self.txignore_path, "r").readlines()
+        self.txignore = []
+        if os.path.exists(self.txignore_path):
+            self.txignore = open(self.txignore_path, "r").readlines()
