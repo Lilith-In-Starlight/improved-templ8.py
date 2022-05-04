@@ -6,7 +6,7 @@ The previous version, which I call templ8.0 was extremely tedious to use and des
 
 It uses textile instead of markdown simply because I personally like it more. Soon, it'll support markdown too.
 
-It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It widl probably remain bad, but I'll try to make it okay over time.
+It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
 
 ## Roadmap
 *Or, i try to pretend i have an organized plan for this project (i dont)*
@@ -85,10 +85,12 @@ EMPTYKEY's default value is an empty string.
 
 ```html
 /basehtml
+
 ...
 <head>
 <title>##PAGETITLE##</title>
 </head>
+...
 ```
 
 
@@ -103,22 +105,25 @@ the page's contents start here
 ```html
 /output/index.html
 
+...
 <head>
 <title>Non Default Value</title>
 </head>
+...
 ```
+
+A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
 
 #### Core Renaming
 You can also rename the input, output, basehtml and repl8ce files using the d8y file. Simply do this, making sure your custom values don't start with a number and dont have spaces:
 
 ```plaintext
-input=yourinputfolder
-output=youroutputfolder
-replace=yourreplacefolder
-basehtml=yourbasehtmlfile
+input=your_input_folder
+output=your_output_folder
+replace=your_replace_file
+basehtml=your_basehtml_file
 ```
 
-A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
 
 ## Versioning
 *Or, roxy how the fuck am i supposed to tell which of these is newest*
