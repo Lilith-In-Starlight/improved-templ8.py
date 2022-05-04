@@ -1,6 +1,6 @@
 # templ8.py
 
-templ8.py (or just templ8) is a templating software for websites designed with lightweightness, flexibility and ease of use in mind. It was also designed with the idea being that one's website is one's temple, so a lot of the terminology is thematic with that.
+templ8.py (or just templ8) is a templating software for websites designed with lightweightness, flexibility and ease of use in mind. It was also designed with the idea being that one's website is one's temple, so a lot of the terminology is thematic with that. Sticking to this thematic is very hard because I also want to bring in Ampersandia and We Know The Devil references into the mix.
 
 The previous version, which I call templ8.0 was extremely tedious to use and designed only for me. This one is an improvement in those regards (not that it being designed for my own projects makes it bad, but it'd be cool to make it generalizable).
 
@@ -32,7 +32,7 @@ templ8 currently has two commands:
 
 - `genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality. Only useful if templ8 is in PATH on environment variables.
 - `divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
-- `radio`: Assembles a blog. It's the worst blogging tool you have ever seen. I won't even document it here, I'll document it on my website later. It's too tedious for a readme.
+- `radio`: Assembles a blog. It's the worst blogging tool you have ever seen.
 
 ### How does it work?
 Put the templ8.py file in an empty folder. Make a file called `d8y` with no extension, a file called `basehtml`, also with no extension, and two folders, `input` and `output`.
@@ -127,6 +127,15 @@ basehtml=your_basehtml_file
 
 #### txignore
 txignore files are like .gitignore files, except they don't mean "don't put this file on the ouput," it's more like "output the raw file." Putting a path to a directory in txignore will be non-recursive, and child directories will not be ignored.
+
+#### i want a blog now
+You should just use another tool and somehow mix it with this, but if you want to insist in using this, templ8 already does its best to simplify what is otherwise a really tedious process.
+
+Just run `templ8 radio` and this'll create a few folders: `blog` in the root of the project, `output/blog` and `output/blog/posts`, and `blogbase` also in the root.
+
+Add textile files on the `blog` folder in the root, these'll be your posts. You don't need to add title or anything as the content, just use the keys `TITLE`, `AUTHORS`, `DATE`, `TAGS` and `INTRO`. INTRO is the one that will appear in the index file (the main page of your blog, where previews of all your articles will be).
+
+This blog is static, so no pages nor search function of any kind. Just articles. If you want the articles to be chronologically ordered, name them something like `000000000001.textile` and increase the number for each new article. There's no core renaming for blog parts, blogs are already scuffed enough.
 
 
 ## Versioning
