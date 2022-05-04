@@ -137,7 +137,7 @@ Add textile files on the `blog` folder in the root, these'll be your posts. You 
 
 This blog is static, so no pages nor search function of any kind. Just articles. If you want the articles to be chronologically ordered, name them something like `000000000001.textile` and increase the number for each new article. There's no core renaming for blog parts, blogs are already scuffed enough.
 
-`blogbase` is what tells templ8 what the blog's most basic layout it. It's very messy to use, but I'll document how it works soon.
+`blogbase` is what tells templ8 what the blog's most basic layout is. It's very messy to use, but I'll document how it works soon.
 
 
 ## Versioning
