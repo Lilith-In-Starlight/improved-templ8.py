@@ -104,7 +104,24 @@ def radio():
     makedir(blog_output)
     makedir(os.path.join(blog_output, "posts"))
     article_format_path = "blogbase"
-    open(article_format_path, "a").close()
+    if not os.path.exists(article_format_path):
+        with open(article_format_path, "w") as f:
+            f.write("""PAGETITLE=##TITLE##
+-BEGINFILE-
+h2. ##TITLE##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##CONTENT##
+
+-BEGININDEX-
+h2. ##TITLE##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##INTRO##
+-BEGININDEX-
+PAGETITLE=Blog""")
     
     # The article format is the file that defines how an article will look, both in its own page and in the index
     article_format_page = open(article_format_path, "r").read().split("-BEGININDEX-")[0]
