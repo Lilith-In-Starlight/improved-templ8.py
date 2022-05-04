@@ -108,17 +108,18 @@ the page's contents start here
 </head>
 ```
 
+A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
+
 #### Core Renaming
 You can also rename the input, output, basehtml and repl8ce files using the d8y file. Simply do this, making sure your custom values don't start with a number and dont have spaces:
 
 ```plaintext
-input=yourinputfolder
-output=youroutputfolder
-replace=yourreplacefolder
-basehtml=yourbasehtmlfile
+input=your_input_folder
+output=your_output_folder
+replace=your_replace_file
+basehtml=your_basehtml_file
 ```
 
-A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
 
 ## Versioning
 *Or, roxy how the fuck am i supposed to tell which of these is newest*
