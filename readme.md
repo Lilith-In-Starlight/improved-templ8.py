@@ -131,11 +131,13 @@ txignore files are like .gitignore files, except they don't mean "don't put this
 #### i want a blog now
 You should just use another tool and somehow mix it with this, but if you want to insist in using this, templ8 already does its best to simplify what is otherwise a really tedious process.
 
-Just run `templ8 radio` and this'll create a few folders: `blog` in the root of the project, `output/blog` and `output/blog/posts`, and `blogbase` also in the root.
+Just run `templ8 radio` and this'll create a few folders: `blog` in the root of the project, `output/blog` and `output/blog/posts`; and a `blogbase` file also in the root.
 
 Add textile files on the `blog` folder in the root, these'll be your posts. You don't need to add title or anything as the content, just use the keys `TITLE`, `AUTHORS`, `DATE`, `TAGS` and `INTRO`. INTRO is the one that will appear in the index file (the main page of your blog, where previews of all your articles will be).
 
 This blog is static, so no pages nor search function of any kind. Just articles. If you want the articles to be chronologically ordered, name them something like `000000000001.textile` and increase the number for each new article. There's no core renaming for blog parts, blogs are already scuffed enough.
+
+`blogbase` is what tells templ8 what the blog's most basic layout it. It's very messy to use, but I'll document how it works soon.
 
 
 ## Versioning
