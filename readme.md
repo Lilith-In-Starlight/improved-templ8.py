@@ -11,7 +11,7 @@ It's currently being made, so I don't expect this to be functional or fully usab
 ## Roadmap
 *Or, i try to pretend i have an organized plan for this project (i dont)*
 
-This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that it isn't but honestly good luck.)
+This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that it isn't ordered but honestly good luck.)
 
 - [x] Basic templating functionality like templ8.0's
 - [x] Easier-to-customize replacement tags
@@ -21,7 +21,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [ ] Change a specific page's basehtml
 - [ ] Markdown support (with mdignore)
 - [ ] IFKEYs for further basetemplate flexibility
-- [ ] Blogging
+- [X] Blogging
 - [ ] RSS and ASS feed generating tool
 
 ## Crash Course
@@ -32,6 +32,7 @@ templ8 currently has two commands:
 
 - `genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality. Only useful if templ8 is in PATH on environment variables.
 - `divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
+- `radio`: Assembles a blog. It's the worst blogging tool you have ever seen. I won't even document it here, I'll document it on my website later. It's too tedious for a readme.
 
 ### How does it work?
 Put the templ8.py file in an empty folder. Make a file called `d8y` with no extension, a file called `basehtml`, also with no extension, and two folders, `input` and `output`.
