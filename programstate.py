@@ -3,7 +3,7 @@ import os
 def makedir(path, warning = ""):
     if not os.path.exists(path):
         if warning != "":
-            print("WARNING: " + path)
+            print("WARNING: " + warning)
         os.mkdir(path)
 
 
