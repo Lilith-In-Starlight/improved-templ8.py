@@ -7,7 +7,7 @@ h2. ##TITLE##
 ##CONTENT##
 
 -BEGININDEX-
-h2. ##TITLE##
+h2. "##TITLE##":##LINK##
 
 ^##AUTHORS## - ##TAGS## - ##DATE##^
 

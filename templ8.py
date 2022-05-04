@@ -115,7 +115,7 @@ h2. ##TITLE##
 ##CONTENT##
 
 -BEGININDEX-
-h2. ##TITLE##
+h2. "##TITLE##":##LINK##
 
 ^##AUTHORS## - ##TAGS## - ##DATE##^
 
@@ -133,7 +133,9 @@ PAGETITLE=Blog""")
     
     # Walk through the blog folder
     for subdir, dirs, files in os.walk(blog_input):
-        for file in files:
+        sortedfiles = files
+        sortedfiles.sort(reverse = True)
+        for file in sortedfiles:
             path = os.path.join(subdir, file)
             file_replace = state.replacements
             # These refer to the individual articles
@@ -173,6 +175,8 @@ PAGETITLE=Blog""")
             # This one is for the index page, it takes the format and puts the info in
             current_file_index = textile.textile(article_format_index)
             
+            current_file_index = current_file_index.replace("##LINK##", 'posts/' + file.replace(".textile", "/index.html"))
+            print(current_file_index)
             for key in file_replace:
                 final_page = final_page.replace("##"+key+"##", file_replace[key])
                 current_file_index = current_file_index.replace("##"+key+"##", file_replace[key])
