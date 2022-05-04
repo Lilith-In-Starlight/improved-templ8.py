@@ -5,7 +5,7 @@ import sys
 
 deity_path = "d8y"
 basehtml_path = "basehtml"
-replacements_path = "rpl8cmnt"
+replacements_path = "repl8ce"
 
 replacements = {}
 
@@ -46,7 +46,7 @@ def load_project():
     makedir(input_folder, "No input directory found, creating one")
     makedir(output_folder, "No output directory found, creating one")
 
-    # Load the replacements from rpl8cmnt
+    # Load the replacements from repl8ce
     if os.path.exists(replacements_path):
         replacement_text = open(replacements_path, "r").readlines()
         for i in replacement_text:

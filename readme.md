@@ -36,7 +36,7 @@ templ8 currently has two commands:
 ### How does it work?
 Put the templ8.py file in an empty folder. Make a file called `d8y` with no extension, a file called `basehtml`, also with no extension, and two folders, `input` and `output`.
 
-You might also want one called `rpl8cmnt` (soon will be renamed to `repl8ce`. Also no extension.
+You might also want one called `repl8ce`, with no extension.
 
 The `basehtml` file is an html file in which templ8.py puts the content of your pages. It tells templ8 how your page should look: Whatever you put in it, will be there in every page.
 
@@ -74,12 +74,23 @@ example paragraph with some html stuff
 You can create custom `##KEYS##` in `rpl8cmnt`. They're parts of the basehtml that individual files can modify.
 
 ```plaintext
-/rpl8cmnt
+/repl8ce
 
-CUSTOMKEY=A Default Value
+PAGETITLE=A Default Title
+CUSTOMKEY=Another default value
+EMPTYKEY
 ```
 
-You can set the value of a key on a file like this
+EMPTYKEY's default value is an empty string.
+
+```html
+/basehtml
+...
+<head>
+<title>##PAGETITLE##</title>
+</head>
+```
+
 
 ```plaintext
 /input/index.html
@@ -88,6 +99,16 @@ CUSTOMKEY=Non Default Value
 -BEGINFILE-
 the page's contents start here
 ```
+
+```html
+/output/index.html
+
+<head>
+<title>Non Default Value</title>
+</head>
+```
+
+A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
 
 ## Versioning
 *Or, roxy how the fuck am i supposed to tell which of these is newest*
