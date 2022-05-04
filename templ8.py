@@ -118,21 +118,7 @@ genesis     Create a new templ8 page.
 divine      Build a templ8 page.
 """)  
 
-if __name__ == "__main__":
-    print(sys.argv)
-    if len(sys.argv) == 1:
-        help()
-    elif len(sys.argv) == 2:
-        if sys.argv[1] == "help":
-            help()
-        elif sys.argv[1] == "divine":
-            divine()
-    elif len(sys.argv) == 3:
-        if sys.argv[1] == "genesis":
-            genesis(sys.argv[2])
-        else:
-            raise Exception("Unexpected number of arguments")
-    
+if __name__ == "__main__":    
     if len(sys.argv) <= 1:
         help()
     elif sys.argv[1] == "help":
