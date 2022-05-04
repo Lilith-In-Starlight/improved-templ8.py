@@ -17,7 +17,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [x] Easier-to-customize replacement tags
 - [x] Copy non-markup files from the input folder into the output
 - [ ] txignore file for textile files that should be put on the output folder unprocessed
-- [ ] Customizing "core" file and directory names of a project
+- [X] Customizing "core" file and directory names of a project
 - [ ] Change a specific page's basehtml
 - [ ] Markdown support (with mdignore)
 - [ ] IFKEYs for further basetemplate flexibility
@@ -106,6 +106,16 @@ the page's contents start here
 <head>
 <title>Non Default Value</title>
 </head>
+```
+
+#### Core Renaming
+You can also rename the input, output, basehtml and repl8ce files using the d8y file. Simply do this, making sure your custom values don't start with a number and dont have spaces:
+
+```plaintext
+input=yourinputfolder
+output=youroutputfolder
+replace=yourreplacefolder
+basehtml=yourbasehtmlfile
 ```
 
 A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.

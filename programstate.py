@@ -19,7 +19,22 @@ class ProgramState:
         self.output_folder = "output"
         
         if not os.path.exists(self.deity_path):
-                raise Exception("No " + self.deity_path + " file found")
+            raise Exception("No " + self.deity_path + " file found")
+        
+        # Core Renaming
+        with open(self.deity_path, "r") as d8y_file:
+            for line in d8y_file.readlines():
+                keyval = line.split("=")
+                if len(keyval) != 2:
+                    raise Exception("Error in d8y file format:\n   " + line)
+                if keyval[0] == "input" and keyval[1].isidentifier():
+                    self.input_folder = keyval[1]
+                elif keyval[0] == "output" and keyval[1].isidentifier():
+                    self.output_folder = keyval[1]
+                elif keyval[0] == "replace" and keyval[1].isidentifier():
+                    self.replacements_path = keyval[1]
+                elif keyval[0] == "basehtml" and keyval[1].isidentifier():
+                    self.basehtml_path = keyval[1]
 
         if not os.path.exists(self.basehtml_path):
             raise Exception("No" + self.basehtml_path + "file found")
