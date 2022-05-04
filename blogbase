@@ -1,0 +1,16 @@
+PAGETITLE=##TITLE##
+-BEGINFILE-
+h2. ##TITLE##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##CONTENT##
+
+-BEGININDEX-
+h2. ##TITLE##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##INTRO##
+-BEGININDEX-
+PAGETITLE=Blog
