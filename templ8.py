@@ -94,9 +94,8 @@ def divine():
     print("Finished assembling")
 
 
-def help(cmd = ""):
-    if cmd == "":
-        print("""
+def help():
+    print("""
         
     ###                                                                 
     ###                                                               ###
@@ -117,7 +116,7 @@ def help(cmd = ""):
 help        Display this list.
 genesis     Create a new templ8 page.
 divine      Build a templ8 page.
-""")                                            
+""")  
 
 if __name__ == "__main__":
     print(sys.argv)
@@ -133,3 +132,18 @@ if __name__ == "__main__":
             genesis(sys.argv[2])
         else:
             raise Exception("Unexpected number of arguments")
+    
+    if len(sys.argv) <= 1:
+        help()
+    elif sys.argv[1] == "help":
+        help()
+    elif sys.argv[1] == "divine":
+        divine()
+    elif sys.argv[1] == "genesis":
+        if len(sys.argv) >= 3:
+            genesis(sys.argv[2])
+        else:
+            raise Exception("Unexpected number of arguments")
+    else:
+        raise Exception("Unknown command")
+    
