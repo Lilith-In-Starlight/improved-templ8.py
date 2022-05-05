@@ -3,6 +3,7 @@ import textile
 import os
 import shutil
 import sys
+import blessing
 
 DEITY_PATH = "d8y"
 DEF_BASEHTML_PATH = "basehtml"
@@ -106,22 +107,7 @@ def radio():
     article_format_path = "blogbase"
     if not os.path.exists(article_format_path):
         with open(article_format_path, "w") as f:
-            f.write("""PAGETITLE=##TITLE##
--BEGINFILE-
-h2. ##TITLE##
-
-^##AUTHORS## - ##TAGS## - ##DATE##^
-
-##CONTENT##
-
--BEGININDEX-
-h2. "##TITLE##":##LINK##
-
-^##AUTHORS## - ##TAGS## - ##DATE##^
-
-##INTRO##
--BEGININDEX-
-PAGETITLE=Blog""")
+            f.write(blessing.DEF_BASEHTML_CONTENT)
     
     # The article format is the file that defines how an article will look, both in its own page and in the index
     article_format_page = open(article_format_path, "r").read().split("-BEGININDEX-")[0]
@@ -206,29 +192,12 @@ PAGETITLE=Blog""")
 
 
 def help():
-    print("""
-        
-    ###                                                                 
-    ###                                                               ###
-    ###                                                               ###       #####
-###########        ###                                                ###     ##    ###
-###########     #########      ### ####    #####      ### ######      ###    ##      ###
-    ###        ###     ###     ###################    ############    ###    ##     ####
-    ###       ###       ###    ###    ####    ####    ###      ####   ###     ##   ####
-    ###       #############    ###     ###     ###    ###       ###   ###      #######
-    ###       #############    ###     ###     ###    ###      ####   ###    ####    ##
-  #######     ###              ###     ###     ###    ############    ###   ####       ##
-    ###       ####      ###    ###     ###     ###    ##########      ###   ###        ##
-    ###         ##########     ###     ###     ###    ###             ###    ###     ###
-    ##            ######       ###     ###     ###    ###             ###      ####### 
-    ##                                                ###
-    #
-
-help        Display this list.
-genesis     Create a new templ8 page.
-divine      Build a templ8 page.
-radio       Build a blog page in output/blog
-""")  
+    print(blessing.TEMPL8_ASCII + "\n\n")
+    print("  help             Display this list.")
+    print("  genesis [name]   Create a new templ8 project in a folder named [name].")
+    print("  divine           Assemble a templ8 site.")
+    print("  radio            Assemble a templ8 blog.")
+    print("")
 
 if __name__ == "__main__":    
     if len(sys.argv) <= 1:
