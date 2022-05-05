@@ -44,10 +44,7 @@ def divine():
                         contents = state.basehtml_content.replace("##CONTENT##", contents)
                         
                         filerepl = state.replacements.copy()
-                        for replace in file_headers.split("\n"):
-                            if replace != "":
-                                keyval = replace.split("=")
-                                filerepl[keyval[0]] = keyval[1]
+                        mod_replaces(filerepl, file_headers)
                         
                         for key in filerepl:
                             contents = contents.replace("##"+key+"##", filerepl[key])

@@ -2,6 +2,7 @@ import os
 import textile
 import programstate
 from blessing import makedir
+from blessing import mod_replaces
 
 # Build the blog
 def radio():
@@ -36,10 +37,7 @@ def radio():
             file_content = open(path, "r").read().split("-BEGINFILE-")[1]
             
             # Get the replace keys of the individual article
-            for i in file_headers.split("\n"):
-                keyval = i.split("=")
-                if len(keyval) == 2:
-                    file_replace[keyval[0]] = keyval[1]
+            mod_replaces(file_replace, file_headers)
             
             # This variable refers to the article page with the contents of this individual file
             article_page = article_format_page
@@ -54,10 +52,7 @@ def radio():
             article_page_headers = article_page.split("-BEGINFILE-")[0]
             article_page_content = article_page.split("-BEGINFILE-")[1]
             
-            for i in article_page_headers.split("\n"):
-                keyval = i.split("=")
-                if len(keyval) == 2:
-                    file_replace[keyval[0]] = keyval[1]
+            mod_replaces(file_replace, article_page_headers)
             
             # This variable is the final page
             final_page = state.basehtml_content
@@ -82,10 +77,7 @@ def radio():
     
     # Generate the index
     blog_replace = state.replacements.copy()
-    for i in blog_replacekeys.split("\n"):
-        keyval = i.split("=")
-        if len(keyval) == 2:
-            blog_replace[keyval[0]] = keyval[1]
+    mod_replaces(blog_replace, blog_replacekeys)
     
     index_html = state.basehtml_content
     index_html = index_html.replace("##CONTENT##", blog_index)
