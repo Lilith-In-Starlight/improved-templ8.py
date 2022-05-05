@@ -32,6 +32,13 @@ class ProgramState:
                     self.basehtml_path = keyval[1]
                 elif keyval[0] == "txignore" and keyval[1].isidentifier():
                     self.txignore_path = keyval[1]
+        
+        
+        self.input_folder = os.path.normpath(self.input_folder)
+        self.output_folder = os.path.normpath(self.output_folder)
+        self.replacements_path = os.path.normpath(self.replacements_path)
+        self.basehtml_path = os.path.normpath(self.basehtml_path)
+        self.txignore_path = os.path.normpath(self.txignore_path)
 
         if not os.path.exists(self.basehtml_path):
             raise Exception("No" + self.basehtml_path + "file found")
@@ -57,10 +64,6 @@ class ProgramState:
                         raise Exception("More than one value assignments on a replace key")
         else:
             print("WARNING: No " + self.replacements_path + " file found, continuing")
-        
-        
-        self.input_folder = os.path.normpath(self.input_folder)
-        self.input_folder = os.path.normpath(self.input_folder)
 
         
         # Load txignore
