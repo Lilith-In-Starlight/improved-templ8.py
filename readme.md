@@ -18,7 +18,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [x] Copy non-markup files from the input folder into the output
 - [x] txignore file for textile files that should be put on the output folder unprocessed
 - [x] Customizing "core" file and directory names of a project
-- [ ] Change a specific page's basehtml
+- [X] Change a specific page's basehtml
 - [ ] Markdown support (with mdignore)
 - [ ] IFKEYs for further basetemplate flexibility
 - [X] Blogging
@@ -130,6 +130,8 @@ This blog is static, so no pages nor search function of any kind. Just articles.
 
 `blogbase` is what tells templ8 what the blog's most basic layout is. It's very messy to use, but I'll document how it works soon.
 
+#### i want a file to have a separate basehtml
+Just add set your file's value of the `CUSTOMBASE` key to the path to your new basehtml. You don't need to set up this key in repl8ce.
 
 ## Versioning
 *Or, roxy how the fuck am i supposed to tell which of these is newest*
