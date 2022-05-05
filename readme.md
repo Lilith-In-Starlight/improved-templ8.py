@@ -43,16 +43,13 @@ The `basehtml` file is an html file in which templ8.py puts the content of your 
 
 Somewhere in `basehtml`'s body should be a line that only says `##CONTENT##`. This is what templ8 will replace for the content.
 
+`/input/index.textile`
 ```textile
-/input/index.textile
-
 example paragraph with some html stuff
 ```
 
-
+`/basehtml`
 ```html
-/basehtml
-
 <html>
   <body>
      ##CONTENT##
@@ -60,9 +57,8 @@ example paragraph with some html stuff
 </html>
 ```
 
+`/output/index.html`
 ```html
-/output/index.html
-
 <html>
   <body>
      <p>example paragraph with some html stuff</p>
@@ -74,9 +70,8 @@ example paragraph with some html stuff
 
 You can create custom `##KEYS##` in `rpl8cmnt`. They're parts of the basehtml that individual files can modify.
 
+`/repl8ce`
 ```plaintext
-/repl8ce
-
 PAGETITLE=A Default Title
 CUSTOMKEY=Another default value
 EMPTYKEY
@@ -84,9 +79,8 @@ EMPTYKEY
 
 EMPTYKEY's default value is an empty string.
 
+`/basehtml`
 ```html
-/basehtml
-
 ...
 <head>
 <title>##PAGETITLE##</title>
@@ -94,18 +88,15 @@ EMPTYKEY's default value is an empty string.
 ...
 ```
 
-
+`/input/index.html`
 ```plaintext
-/input/index.html
-
 CUSTOMKEY=Non Default Value
 -BEGINFILE-
 the page's contents start here
 ```
 
+`/output/index.html`
 ```html
-/output/index.html
-
 ...
 <head>
 <title>Non Default Value</title>
