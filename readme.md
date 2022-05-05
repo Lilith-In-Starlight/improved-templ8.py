@@ -4,7 +4,7 @@ templ8.py (or just templ8) is a templating software for websites designed with l
 
 The previous version, which I call templ8.0 was extremely tedious to use and designed only for me. This one is an improvement in those regards (not that it being designed for my own projects makes it bad, but it'd be cool to make it generalizable).
 
-It uses textile instead of markdown simply because I personally like it more. Soon, it'll support markdown too.
+It uses [textile](textile-lang.org) instead of markdown simply because I personally like it more. Soon, it'll support markdown too.
 
 It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
 
