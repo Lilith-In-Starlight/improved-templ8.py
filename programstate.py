@@ -1,11 +1,5 @@
 import os
-
-def makedir(path, warning = ""):
-    if not os.path.exists(path):
-        if warning != "":
-            print("WARNING: " + warning)
-        os.mkdir(path)
-
+from blessing import makedir
 
 class ProgramState:
     def __init__(self):
@@ -17,10 +11,6 @@ class ProgramState:
 
         self.input_folder = r"input"
         self.output_folder = r"output"
-        self.blog_output = "blog"
-        self.blog_input = "blog"
-        self.blog_article = "blogarticle"
-        self.blog_replaces = "blogrepl8ce"
         
         # Load d8y
         if not os.path.exists(self.deity_path):

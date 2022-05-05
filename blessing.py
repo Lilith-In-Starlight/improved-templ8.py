@@ -1,3 +1,5 @@
+import os
+
 TEMPL8_ASCII = """
     ###                                                                 
     ###                                                               ###
@@ -30,3 +32,10 @@ h2. "##TITLE##":##LINK##
 ##INTRO##
 -BEGININDEX-
 PAGETITLE=Blog"""
+
+
+def makedir(path, warning = ""):
+    if not os.path.exists(path):
+        if warning != "":
+            print("WARNING: " + warning)
+        os.mkdir(path)
