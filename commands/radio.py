@@ -81,6 +81,10 @@ def radio():
     mod_replaces(blog_replace, blog_replacekeys)
     
     index_html = state.basehtml_content
+    if "CUSTOMBASE" in blog_replace:
+        if os.path.exists(blog_replace["CUSTOMBASE"]):
+            index_html = open(filerepl["CUSTOMBASE"], "r").read()
+    
     index_html = index_html.replace("##CONTENT##", blog_index)
     for key in blog_replace:
         index_html = index_html.replace("##"+key+"##", blog_replace[key])

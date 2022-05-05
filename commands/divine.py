@@ -3,6 +3,7 @@ import shutil
 import textile
 import programstate
 from blessing import makedir
+from blessing import mod_replaces
 
 # Divines a website
 def divine():
@@ -40,11 +41,20 @@ def divine():
                           
                     
                     if not in_txignore:
-                        contents = textile.textile(file_content)
-                        contents = state.basehtml_content.replace("##CONTENT##", contents)
-                        
                         filerepl = state.replacements.copy()
                         mod_replaces(filerepl, file_headers)
+                        
+                        
+                        contents = textile.textile(file_content)
+                        
+                        if not "CUSTOMBASE" in filerepl:
+                            contents = state.basehtml_content.replace("##CONTENT##", contents)
+                        else:
+                            if os.path.exists(filerepl["CUSTOMBASE"]):
+                                contents = open(filerepl["CUSTOMBASE"], "r").read().replace("##CONTENT##", contents)
+                            else:
+                                raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
+                        
                         
                         for key in filerepl:
                             contents = contents.replace("##"+key+"##", filerepl[key])
