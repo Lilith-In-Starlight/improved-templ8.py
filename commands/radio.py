@@ -1,6 +1,7 @@
 import os
 import textile
 import programstate
+import blessing
 from blessing import makedir
 from blessing import mod_replaces
 from blessing import parse_content
@@ -23,8 +24,7 @@ def radio():
     article_format_index = open(article_format_path, "r").read().split("-BEGININDEX-")[1]
     blog_replacekeys = open(article_format_path, "r").read().split("-BEGININDEX-")[2]
     
-    # This is the full index's textile    
-    blog_is_md = False
+    blog_index = ""
     
     # Walk through the blog folder
     for subdir, dirs, files in os.walk(blog_input):
