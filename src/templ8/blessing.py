@@ -1,4 +1,6 @@
 import os
+import textile
+import pypandoc
 
 TEMPL8_ASCII = """
     ###                                                                 
@@ -55,9 +57,9 @@ def mod_replaces(input_replaces, header):
 
 def parse_content(content, ext):
     if ext == ".textile":
-        return textile.textile(file_content)
+        return textile.textile(content)
     elif ext == ".md":
-        return pypandoc.convert_text(file_content, "html5", format="md")
+        return pypandoc.convert_text(content, "html5", format="md")
     else:
         raise Exception("Can't recognize the extension in " + os.join(subdir, file))
         return ""

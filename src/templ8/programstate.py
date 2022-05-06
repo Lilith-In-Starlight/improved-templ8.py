@@ -42,7 +42,7 @@ class ProgramState:
         self.txignore_path = os.path.normpath(self.txignore_path)
 
         if not os.path.exists(self.basehtml_path):
-            raise Exception("No" + self.basehtml_path + "file found")
+            raise Exception("No " + self.basehtml_path + " file found")
 
         self.basehtml_content = open(self.basehtml_path, "r").read()
 
