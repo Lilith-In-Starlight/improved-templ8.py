@@ -1,12 +1,14 @@
-# templ8.py
+# templ8
 
-templ8.py (or just templ8) is a templating software for websites designed with lightweightness, flexibility and ease of use in mind. It was also designed with the idea being that one's website is one's temple, so a lot of the terminology is thematic with that. Sticking to this thematic is very hard because I also want to bring in Ampersandia and We Know The Devil references into the mix.
+templ8 is a templating software for websites designed with lightweightness, flexibility and ease of use in mind. It was also designed with the idea that one's website is one's temple, so a lot of the terminology is thematic with that. Sticking to this thematic is very hard because I also want to bring in Ampersandia and We Know The Devil references into the mix, which don't mix well with the original idea. I honestly don't care about that problem, though.
 
 The previous version, which I call templ8.0 was extremely tedious to use and designed only for me. This one is an improvement in those regards (not that it being designed for my own projects makes it bad, but it'd be cool to make it generalizable).
 
 It uses [textile](textile-lang.org) and Markdown. It detects which format you want to use by checking the files' extensions.
 
 It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
+
+[My website](ampersandia.net) is made with this tool.
 
 ## Installing
 Simply run `pip install templ8` and make sure that the scripts directory of your python install scheme is in path.
