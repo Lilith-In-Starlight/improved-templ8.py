@@ -12,6 +12,7 @@ class ProgramState:
         self.input_folder = r"input"
         self.output_folder = r"output"
         
+        
         # Load d8y
         if not os.path.exists(self.deity_path):
             raise Exception("No " + self.deity_path + " file found")

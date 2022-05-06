@@ -2,8 +2,10 @@ import os
 import shutil
 import textile
 import programstate
+import pypandoc
 from blessing import makedir
 from blessing import mod_replaces
+from blessing import parse_content
 
 # Divines a website
 def divine():
@@ -15,9 +17,10 @@ def divine():
             
         for file in files:
             path = os.path.join(subdir, file)
+            file_extension = os.path.splitext(path)[1]
             outpath = path.replace(state.input_folder, state.output_folder, 1)
-            outhtml = outpath.replace(".textile", ".html", -1)
-            if path.endswith(".textile"):
+            outhtml = outpath.replace(file_extension, ".html", -1)
+            if file_extension in [".textile", ".md"]:
                 with open(path, "r") as f:
                     contents = ""
                     file_split = f.read().split("-BEGINFILE-")
@@ -45,8 +48,10 @@ def divine():
                         mod_replaces(filerepl, file_headers)
                         
                         
-                        contents = textile.textile(file_content)
+                        # Turn the content into HTML
+                        contents = parse_content(file_content, file_extension)
                         
+                        # Put the content in the base HTML
                         if not "CUSTOMBASE" in filerepl:
                             contents = state.basehtml_content.replace("##CONTENT##", contents)
                         else:

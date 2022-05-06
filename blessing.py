@@ -46,3 +46,13 @@ def mod_replaces(input_replaces, header):
         keyval = i.split("=")
         if len(keyval) == 2:
             input_replaces[keyval[0]] = keyval[1]
+
+
+def parse_content(content, ext):
+    if ext == ".textile":
+        return textile.textile(file_content)
+    elif ext == ".md":
+        return pypandoc.convert_text(file_content, "html5", format="md")
+    else:
+        raise Exception("Can't recognize the extension in " + os.join(subdir, file))
+        return ""
