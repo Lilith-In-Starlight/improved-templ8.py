@@ -4,3 +4,4 @@ __pycache__
 testblog/blog/*
 dist/*
 *.egg-info/
+*.msi

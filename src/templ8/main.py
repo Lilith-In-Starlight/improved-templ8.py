@@ -4,6 +4,7 @@ from templ8.divine import divine
 from templ8.radio import radio
 from templ8.genesis import genesis
 from templ8.blessing import makedir
+from templ8.pandoc import pandoc
 
 DEITY_PATH = "d8y"
 DEF_BASEHTML_PATH = "basehtml"
@@ -19,6 +20,7 @@ def help():
     print("  genesis [name]   Create a new templ8 project in a folder named [name].")
     print("  divine           Assemble a templ8 site.")
     print("  radio            Assemble a templ8 blog.")
+    print("  pandoc           Downloads a pandoc binary for markdown use.")
     print("")
 
 
@@ -31,6 +33,8 @@ def main():
         divine()
     elif sys.argv[1] == "radio":
         radio()
+    elif sys.argv[1] == "pandoc":
+        pandoc()
     elif sys.argv[1] == "genesis":
         if len(sys.argv) >= 3:
             genesis(sys.argv[2])

@@ -35,9 +35,10 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 ### Commands
 templ8 currently has two commands:
 
-- `genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality.
-- `divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
-- `radio`: Assembles a blog. It's the worst blogging tool you have ever seen.
+- `templ8 genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality.
+- `templ8 divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
+- `templ8 radio`: Assembles a blog. It's the worst blogging tool you have ever seen.
+- `templ8 pandoc`: Installs pandoc, use it if you want to use markdown instead of textile. It may error and still work. I don't know why.
 
 ### How does it work?
 Put the templ8.py file in an empty folder. Make a file called `d8y` with no extension, a file called `basehtml`, also with no extension, and two folders, `input` and `output`.
