@@ -1,9 +1,9 @@
 import sys
-import blessing
-from commands.divine import divine
-from commands.radio import radio
-from commands.genesis import genesis
-from blessing import makedir
+import templ8.blessing
+from templ8.divine import divine
+from templ8.radio import radio
+from templ8.genesis import genesis
+from templ8.blessing import makedir
 
 DEITY_PATH = "d8y"
 DEF_BASEHTML_PATH = "basehtml"
@@ -14,7 +14,7 @@ DEF_OUTPUT = "output"
 
 
 def help():
-    print(blessing.TEMPL8_ASCII + "\n\n")
+    print(templ8.blessing.TEMPL8_ASCII + "\n\n")
     print("  help             Display this list.")
     print("  genesis [name]   Create a new templ8 project in a folder named [name].")
     print("  divine           Assemble a templ8 site.")
@@ -22,7 +22,7 @@ def help():
     print("")
 
 
-if __name__ == "__main__":    
+def main():
     if len(sys.argv) <= 1:
         help()
     elif sys.argv[1] == "help":

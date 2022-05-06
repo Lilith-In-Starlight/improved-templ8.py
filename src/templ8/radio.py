@@ -1,14 +1,14 @@
 import os
 import textile
-import programstate
-import blessing
-from blessing import makedir
-from blessing import mod_replaces
-from blessing import parse_content
+import templ8.programstate
+import templ8.blessing
+from templ8.blessing import makedir
+from templ8.blessing import mod_replaces
+from templ8.blessing import parse_content
 
 # Build the blog
 def radio():
-    state = programstate.ProgramState()
+    state = templ8.programstate.ProgramState()
     blog_input = "blog"
     blog_output = os.path.join(state.output_folder, "blog")
     makedir(blog_input)
@@ -17,7 +17,7 @@ def radio():
     article_format_path = "blogbase"
     if not os.path.exists(article_format_path):
         with open(article_format_path, "w") as f:
-            f.write(blessing.DEF_BASEHTML_CONTENT)
+            f.write(templ8.blessing.DEF_BASEHTML_CONTENT)
     
     # The article format is the file that defines how an article will look, both in its own page and in the index
     article_format_page = open(article_format_path, "r").read().split("-BEGININDEX-")[0]
@@ -93,3 +93,5 @@ def radio():
     
     with open(os.path.join(blog_output, "index.html"), "w") as f:
         f.write(index_html)
+        
+    print("Finished assembling")

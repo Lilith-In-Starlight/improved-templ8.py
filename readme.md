@@ -8,6 +8,9 @@ It uses [textile](textile-lang.org) and Markdown. It detects which format you wa
 
 It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
 
+## Installing
+Simply run `pip install templ8` and make sure that the scripts directory of your python install scheme is in path.
+
 ## Roadmap
 *Or, i try to pretend i have an organized plan for this project (i dont)*
 
@@ -30,7 +33,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 ### Commands
 templ8 currently has two commands:
 
-- `genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality. Only useful if templ8 is in PATH on environment variables.
+- `genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality.
 - `divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
 - `radio`: Assembles a blog. It's the worst blogging tool you have ever seen.
 

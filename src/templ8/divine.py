@@ -1,15 +1,15 @@
 import os
 import shutil
 import textile
-import programstate
+import templ8.programstate
 import pypandoc
-from blessing import makedir
-from blessing import mod_replaces
-from blessing import parse_content
+from templ8.blessing import makedir
+from templ8.blessing import mod_replaces
+from templ8.blessing import parse_content
 
 # Divines a website
 def divine():
-    state = programstate.ProgramState()
+    state = templ8.programstate.ProgramState()
     for subdir, dirs, files in os.walk(state.input_folder):
         for dir in dirs:
             path = os.path.join(subdir, dir).replace(state.input_folder, state.output_folder, 1)

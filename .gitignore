@@ -1,4 +1,6 @@
-input/*
-output/*
+testblog/input/*
+testblog/output/*
 __pycache__
-blog/*
+testblog/blog/*
+dist/*
+*.egg-info/

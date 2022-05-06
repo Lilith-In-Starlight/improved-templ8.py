@@ -1,5 +1,5 @@
 import os
-from blessing import makedir
+from templ8.blessing import makedir
 
 class ProgramState:
     def __init__(self):
