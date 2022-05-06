@@ -33,6 +33,11 @@ h2. "##TITLE##":##LINK##
 -BEGININDEX-
 PAGETITLE=Blog"""
 
+DEF_INPUT = "input"
+DEF_OUTPUT = "output"
+DEITY_PATH = "d8y"
+DEF_BASEHTML_PATH = "basehtml"
+DEF_REPLACE_PATH = "repl8ce"
 
 def makedir(path, warning = ""):
     if not os.path.exists(path):
