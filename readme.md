@@ -4,7 +4,7 @@ templ8.py (or just templ8) is a templating software for websites designed with l
 
 The previous version, which I call templ8.0 was extremely tedious to use and designed only for me. This one is an improvement in those regards (not that it being designed for my own projects makes it bad, but it'd be cool to make it generalizable).
 
-It uses [textile](textile-lang.org) instead of markdown simply because I personally like it more. Soon, it'll support markdown too.
+It uses [textile](textile-lang.org) and Markdown. It detects which format you want to use by checking the files' extensions.
 
 It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
 
@@ -19,7 +19,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [x] txignore file for textile files that should be put on the output folder unprocessed
 - [x] Customizing "core" file and directory names of a project
 - [X] Change a specific page's basehtml
-- [ ] Markdown support (with mdignore)
+- [X] Markdown support
 - [ ] IFKEYs for further basetemplate flexibility
 - [X] Blogging
 - [ ] RSS and ASS feed generating tool
@@ -117,7 +117,7 @@ basehtml=your_basehtml_file
 ```
 
 #### txignore
-txignore files are like .gitignore files, except they don't mean "don't put this file on the ouput," it's more like "output the raw file." Putting a path to a directory in txignore will be non-recursive, and child directories will not be ignored.
+txignore files are like .gitignore files, except they don't mean "don't put this file on the ouput," it's more like "output the raw file." Putting a path to a directory in txignore will be non-recursive, and child directories will not be ignored. It also works for markdown files.
 
 #### i want a blog now
 You should just use another tool and somehow mix it with this, but if you want to insist in using this, templ8 already does its best to simplify what is otherwise a really tedious process.
@@ -128,7 +128,26 @@ Add textile files on the `blog` folder in the root, these'll be your posts. You 
 
 This blog is static, so no pages nor search function of any kind. Just articles. If you want the articles to be chronologically ordered, name them something like `000000000001.textile` and increase the number for each new article. There's no core renaming for blog parts, blogs are already scuffed enough.
 
-`blogbase` is what tells templ8 what the blog's most basic layout is. It's very messy to use, but I'll document how it works soon.
+`blogbase` is what tells templ8 what the blog's most basic layout is. It's very messy to use, but I'll document how it works soon. If you want to use Markdown for your blog, change the it for this:
+
+```markdown
+PAGETITLE=##TITLE##
+-BEGINFILE-
+## ##TITLE##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##CONTENT##
+
+-BEGININDEX-
+## "##TITLE##":##LINK##
+
+^##AUTHORS## - ##TAGS## - ##DATE##^
+
+##INTRO##
+-BEGININDEX-
+PAGETITLE=Blog
+```
 
 #### i want a file to have a separate basehtml
 Just add set your file's value of the `CUSTOMBASE` key to the path to your new basehtml. You don't need to set up this key in repl8ce.

@@ -3,6 +3,7 @@ import textile
 import programstate
 from blessing import makedir
 from blessing import mod_replaces
+from blessing import parse_content
 
 # Build the blog
 def radio():
@@ -22,8 +23,8 @@ def radio():
     article_format_index = open(article_format_path, "r").read().split("-BEGININDEX-")[1]
     blog_replacekeys = open(article_format_path, "r").read().split("-BEGININDEX-")[2]
     
-    # This is the full index's textile
-    blog_index = ""
+    # This is the full index's textile    
+    blog_is_md = False
     
     # Walk through the blog folder
     for subdir, dirs, files in os.walk(blog_input):
@@ -31,6 +32,7 @@ def radio():
         sortedfiles.sort(reverse = True)
         for file in sortedfiles:
             path = os.path.join(subdir, file)
+            file_extension = os.path.splitext(path)[1]
             file_replace = state.replacements
             # These refer to the individual articles
             file_headers = open(path, "r").read().split("-BEGINFILE-")[0]
@@ -59,10 +61,10 @@ def radio():
             final_page = state.basehtml_content
             
             # Apply the keys of the article page and put in the content
-            final_page = final_page.replace("##CONTENT##", textile.textile(article_page_content))
+            final_page = final_page.replace("##CONTENT##", parse_content(article_page_content, file_extension))
             
             # (This var is for the index page, it takes the format and puts the info in)
-            current_file_index = textile.textile(article_format_index)
+            current_file_index = textile.textile(parse_content(article_format_index, file_extension))
             
             current_file_index = current_file_index.replace("##LINK##", 'posts/' + file.replace(".textile", "/index.html"))
             for key in file_replace:
