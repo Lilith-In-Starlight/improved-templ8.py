@@ -63,8 +63,9 @@ def radio():
             # Apply the keys of the article page and put in the content
             final_page = final_page.replace("##CONTENT##", parse_content(article_page_content, file_extension))
             
-            # (This var is for the index page, it takes the format and puts the info in)
-            current_file_index = textile.textile(parse_content(article_format_index, file_extension))
+            # (This var is for the index page, it takes the format and puts the info in)            
+            current_file_index = textile.textile(parse_content(article_format_index.replace("##INTRO##", file_replace["INTRO"]), file_extension))
+            
             
             current_file_index = current_file_index.replace("##LINK##", 'posts/' + file.replace(".textile", "/index.html"))
             for key in file_replace:

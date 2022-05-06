@@ -52,7 +52,7 @@ def mod_replaces(input_replaces, header):
     for i in header.split("\n"):
         keyval = i.split("=")
         if len(keyval) == 2:
-            input_replaces[keyval[0]] = keyval[1]
+            input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
 
 
 def parse_content(content, ext):
