@@ -8,13 +8,24 @@ from templ8.blessing import parse_content
 
 # Build the blog
 def radio():
+    # Load the state of the program (important files and stuff)
     state = templ8.programstate.ProgramState()
+    
+    # Folder where the blog is
     blog_input = "blog"
+    
+    # Folder where the processed blog will be
     blog_output = os.path.join(state.output_folder, "blog")
     makedir(blog_input)
     makedir(blog_output)
+    
+    # Folder for the articles
     makedir(os.path.join(blog_output, "posts"))
+    
+    # The blogbase file
     article_format_path = "blogbase"
+    
+    # If there's no base blog file, create one
     if not os.path.exists(article_format_path):
         with open(article_format_path, "w") as f:
             f.write(templ8.blessing.DEF_BASEHTML_CONTENT)
@@ -30,6 +41,7 @@ def radio():
     for subdir, dirs, files in os.walk(blog_input):
         sortedfiles = files
         sortedfiles.sort(reverse = True)
+        
         for file in sortedfiles:
             path = os.path.join(subdir, file)
             file_extension = os.path.splitext(path)[1]

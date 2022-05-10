@@ -9,20 +9,26 @@ from templ8.blessing import parse_content
 
 # Divines a website
 def divine():
+    # Load the state of the program (important files and stuff)
     state = templ8.programstate.ProgramState()
     for subdir, dirs, files in os.walk(state.input_folder):
+        # Copy all the folders in case they're not there yet
         for dir in dirs:
             path = os.path.join(subdir, dir).replace(state.input_folder, state.output_folder, 1)
             makedir(path)
-            
+        
+        # Process the files
         for file in files:
             path = os.path.join(subdir, file)
             file_extension = os.path.splitext(path)[1]
             outpath = path.replace(state.input_folder, state.output_folder, 1)
             outhtml = outpath.replace(file_extension, ".html", -1)
+            
+            # Only process textile and md files
             if file_extension in [".textile", ".md"]:
                 with open(path, "r") as f:
                     contents = ""
+                    # Get the headers and the content
                     file_split = f.read().split("-BEGINFILE-",1)
                     file_headers = ""
                     file_content = ""
@@ -44,6 +50,7 @@ def divine():
                           
                     
                     if not in_txignore:
+                        # Process repl8ce
                         filerepl = state.replacements.copy()
                         mod_replaces(filerepl, file_headers)
                         
@@ -60,7 +67,7 @@ def divine():
                             else:
                                 raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
                         
-                        
+                        # Put the keys there
                         for key in filerepl:
                             contents = contents.replace("##"+key+"##", filerepl[key])
                             

@@ -35,13 +35,14 @@ class ProgramState:
                 elif keyval[0] == "txignore":
                     self.txignore_path = keyval[1]
         
-        
+        # Making sure the core renames are valid paths
         self.input_folder = os.path.normpath(self.input_folder)
         self.output_folder = os.path.normpath(self.output_folder)
         self.replacements_path = os.path.normpath(self.replacements_path)
         self.basehtml_path = os.path.normpath(self.basehtml_path)
         self.txignore_path = os.path.normpath(self.txignore_path)
-
+        
+        # Crash if there's no basehtml
         if not os.path.exists(self.basehtml_path):
             raise Exception("No " + self.basehtml_path + " file found")
 
