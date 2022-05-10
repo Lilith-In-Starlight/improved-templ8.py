@@ -1,5 +1,6 @@
 import os
 from templ8.blessing import makedir
+from templ8.blessing import mod_replaces
 
 class ProgramState:
     def __init__(self):
@@ -11,7 +12,7 @@ class ProgramState:
 
         self.input_folder = r"input"
         self.output_folder = r"output"
-        
+                
         
         # Load d8y
         if not os.path.exists(self.deity_path):
@@ -23,15 +24,15 @@ class ProgramState:
                 keyval = line.split("=")
                 if len(keyval) != 2:
                     raise Exception("Error in d8y file format:\n   " + line)
-                if keyval[0] == "input" and keyval[1].isidentifier():
+                if keyval[0] == "input" and keyval[1]:
                     self.input_folder = keyval[1]
-                elif keyval[0] == "output" and keyval[1].isidentifier():
+                elif keyval[0] == "output" and keyval[1]:
                     self.output_folder = keyval[1]
-                elif keyval[0] == "replace" and keyval[1].isidentifier():
+                elif keyval[0] == "replace" and keyval[1]):
                     self.replacements_path = keyval[1]
-                elif keyval[0] == "basehtml" and keyval[1].isidentifier():
+                elif keyval[0] == "basehtml":
                     self.basehtml_path = keyval[1]
-                elif keyval[0] == "txignore" and keyval[1].isidentifier():
+                elif keyval[0] == "txignore" and keyval[1]:
                     self.txignore_path = keyval[1]
         
         
@@ -53,16 +54,8 @@ class ProgramState:
 
         # Load the replacements from repl8ce
         if os.path.exists(self.replacements_path):
-            replacement_text = open(self.replacements_path, "r").readlines()
-            for i in replacement_text:
-                if replacement_text != "":
-                    rep_key = i.split("=")
-                    if len(rep_key) == 2:
-                        self.replacements[rep_key[0]] = rep_key[1]
-                    elif len(rep_key) == 1:
-                        self.replacements[rep_key[0]] = ""
-                    else:
-                        raise Exception("More than one value assignments on a replace key")
+            replacement_text = open(self.replacements_path, "r").read()
+            mod_replaces(self.replacements, replacement_text)
         else:
             print("WARNING: No " + self.replacements_path + " file found, continuing")
 
