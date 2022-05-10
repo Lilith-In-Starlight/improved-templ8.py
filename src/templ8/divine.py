@@ -23,17 +23,17 @@ def divine():
             if file_extension in [".textile", ".md"]:
                 with open(path, "r") as f:
                     contents = ""
-                    file_split = f.read().split("-BEGINFILE-")
+                    file_split = f.read().split("-BEGINFILE-",1)
                     file_headers = ""
                     file_content = ""
-                    if len(file_split) == 2:
+                    if len(file_split) >= 2:
                         file_headers = file_split[0]
                         file_content = file_split[1]
                     elif len(file_split) == 1:
                         file_headers = ""
                         file_content = file_split[0]
                     else:
-                        raise Exception("More than one -BEGINFILE- markers")
+                        raise Exception("Issue regarding -BEGINFILE- markers.")
                     
                     # Check if the folder is in txignore
                     in_txignore = False

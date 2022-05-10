@@ -50,7 +50,7 @@ def makedir(path, warning = ""):
 
 def mod_replaces(input_replaces, header):
     for i in header.split("\n"):
-        keyval = i.split("=")
+        keyval = i.split("=", 1)
         if len(keyval) == 2:
             input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
 

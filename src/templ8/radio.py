@@ -35,8 +35,8 @@ def radio():
             file_extension = os.path.splitext(path)[1]
             file_replace = state.replacements
             # These refer to the individual articles
-            file_headers = open(path, "r").read().split("-BEGINFILE-")[0]
-            file_content = open(path, "r").read().split("-BEGINFILE-")[1]
+            file_headers = open(path, "r").read().split("-BEGINFILE-", 1)[0]
+            file_content = open(path, "r").read().split("-BEGINFILE-", 1)[1]
             
             # Get the replace keys of the individual article
             mod_replaces(file_replace, file_headers)
