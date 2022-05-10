@@ -49,10 +49,30 @@ def makedir(path, warning = ""):
 
 
 def mod_replaces(input_replaces, header):
+    current_multival = ""
+    current_multikey = ""
+    multiline = False
     for i in header.split("\n"):
         keyval = i.split("=", 1)
-        if len(keyval) == 2:
+        if len(keyval) == 2 and not multiline:
             input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
+        elif len(keyval) == 1 and keyval[0] != "":
+            if keyval[0].startswith(";;"):
+                if multiline:
+                    print(current_multikey)
+                    input_replaces[current_multikey] = current_multival
+                multiline = True
+                current_multival = ""
+                current_multikey = keyval[0].replace(";;", "", 1)
+            elif multiline:
+                current_multival += keyval[0] + "\n"
+            else:
+                raise Exception("what")
+                
+                    
+                    
+                    
+                
 
 
 def parse_content(content, ext):
