@@ -110,7 +110,16 @@ the page's contents start here
 ...
 ```
 
-A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals.
+A custom key can be replaced with an empty string by doing `CUSTOMKEY=` with nothing after the equals. You can have multiline values by using this format:
+
+```plaintext
+;;KEY
+Multi
+line
+value
+```
+
+All multiline keys must go after the single line keys.
 
 #### Core Renaming
 You can also rename the input, output, basehtml and repl8ce files using the d8y file. Simply do this, making sure your custom values don't start with a number and dont have spaces:
