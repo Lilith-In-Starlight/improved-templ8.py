@@ -80,7 +80,7 @@ You can create custom `##KEYS##` in `rpl8cmnt`. They're parts of the basehtml th
 ```plaintext
 PAGETITLE=A Default Title
 CUSTOMKEY=Another default value
-EMPTYKEY
+EMPTYKEY=
 ```
 
 EMPTYKEY's default value is an empty string.

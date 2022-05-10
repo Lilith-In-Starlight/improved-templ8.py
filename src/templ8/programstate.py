@@ -24,15 +24,15 @@ class ProgramState:
                 keyval = line.split("=")
                 if len(keyval) != 2:
                     raise Exception("Error in d8y file format:\n   " + line)
-                if keyval[0] == "input" and keyval[1]:
+                if keyval[0] == "input":
                     self.input_folder = keyval[1]
-                elif keyval[0] == "output" and keyval[1]:
+                elif keyval[0] == "output":
                     self.output_folder = keyval[1]
-                elif keyval[0] == "replace" and keyval[1]):
+                elif keyval[0] == "replace":
                     self.replacements_path = keyval[1]
                 elif keyval[0] == "basehtml":
                     self.basehtml_path = keyval[1]
-                elif keyval[0] == "txignore" and keyval[1]:
+                elif keyval[0] == "txignore":
                     self.txignore_path = keyval[1]
         
         
