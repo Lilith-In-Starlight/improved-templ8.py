@@ -5,6 +5,7 @@ from templ8.radio import radio
 from templ8.genesis import genesis
 from templ8.blessing import makedir
 from templ8.pandoc import pandoc
+from templ8.neo import neo
 
 DEITY_PATH = "d8y"
 DEF_BASEHTML_PATH = "basehtml"
@@ -35,6 +36,8 @@ def main():
 		radio()
 	elif sys.argv[1] == "pandoc":
 		pandoc()
+	elif sys.argv[1] == "neo":
+		neo()
 	elif sys.argv[1] == "genesis":
 		if len(sys.argv) >= 3:
 			genesis(sys.argv[2])
