@@ -1,0 +1,36 @@
+	repl8ce
+
+repl8ce keys are what allows your textile and markdown files to change parts of your html template.
+In the html template, they look like this:
+
+	##KEYVALUE##
+
+You must set a default value for each key in repl8ce. Otherwise, when a file doesn't set a value for a key, it will error.
+On a markdown or textile file, you can set the values of keys like this:
+
+	KEY1=Value number one
+	KEY2=a second value
+	KEY3=
+	-BEGINFILE-
+
+The -BEGINFILE- keyword is important. It determines where the tags end and the content begins. KEY3's value is an empty string.
+
+You can have multiline values like this:
+
+	;;KEY4
+	this
+	is
+	its
+	value
+	-BEGINFILE-
+
+All multiline keys must go after every line key. The following is considered to be all part of KEY3.
+
+	;;KEY5
+	a
+	value
+	KEY6=another value
+
+To set the default values of keys on repl8ce, simply use this same notation, without the -BEGINFILE- part. Default values can also be empty strings.
+
+The ##CONTENT## keyword is actually a repl8ce key, it's just that its value is determined by the software and not by the user. Other key like this one is the ##LINK## key, which exists only in blogs. Fun!

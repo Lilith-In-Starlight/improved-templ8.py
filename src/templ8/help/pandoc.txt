@@ -1,0 +1,7 @@
+	pandoc
+
+Downloads and installs pandoc, only necessary if you will use Markdown and don't have pandoc already installed.
+
+It is possible for this command to error and still function properly. I don't know why.
+
+This command only needs to be run once in each user. If you've already used it, chances are you won't ever need to use it anymore.

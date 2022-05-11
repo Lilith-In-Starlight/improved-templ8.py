@@ -1,0 +1,5 @@
+	genesis [name]
+  
+Generates a folder for a templ8 project. It will contain the basic core files needed to make one. Base project files and directiories are renamable. 
+
+See: help core_renaming

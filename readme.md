@@ -35,6 +35,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 ### Commands
 templ8 currently has two commands:
 
+- `templ8 help (command)`: Shows help for the (command). The (command) is optional.
 - `templ8 genesis [dirname]`: Creates a new directory named `[dirname]` with basic files required for templ8's functionality.
 - `templ8 divine`: Assembles the current project into a website in the output folder. Requires a `d8y` file to be in the current directory. It also copies non-textile files to the output.
 - `templ8 radio`: Assembles a blog. It's the worst blogging tool you have ever seen.

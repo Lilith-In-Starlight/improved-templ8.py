@@ -1,0 +1,13 @@
+	Core Renaming
+
+Core renaming is a cool functionaility that allows you to rename most of the core directories and files.
+It works thanks to the d8y file, which cannot be renamed. It uses the same format as single line repl8ce keys.
+These are the core rename keys and the files they map to:\n
+
+	KEY        ->   FILE/DIR
+	------------>-----------
+	replace    ->    repl8ce
+	output     ->     output
+	input      ->      input
+	basehtml   ->   basehtml
+	txignore   ->   txignore

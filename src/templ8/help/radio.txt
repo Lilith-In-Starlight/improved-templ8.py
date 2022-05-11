@@ -1,0 +1,37 @@
+	radio
+
+If all the blog core files aren't set up, it generates the basics required of a textile blog.")
+Exports the blog to the output folder.
+
+Core blog files and directories aren't renamable.
+
+See: help core_renaming
+
+A blog requires a few things:
+
+- A baseblog file, to model the article pages, article previews and blog index's repl8ce keys
+- A blog directory as input
+- An output/blog directory as output for the index
+- An output/blog/posts directory as output for the articles
+
+The baseblog is a complex file composed of three simple parts, all separated by a -BEGININDEX- keyword.
+
+The first part of the baseblog is the article page template (from now on PAGE). The PAGEs correspond to specific articles, displaying them in full. It is a page file, so it has its own -BEGINPAGE- keyword. It also contains a ##CONTENT## key to put the content of the textile or markdown files.
+
+The second part is the blog preview (from now on PREVIEW), which is the short part of the article that appears in the INDEX.
+
+The blog index (the INDEX) is the part of the blog where all the PREVIEWs appear. The third part of the baseblog are the INDEX's repl8ce keys.
+
+	How A File Is Processed
+
+Each article of the blog in markdown on textile (from now on FILE) is processed separately.
+
+Then, the content of the FILE is put in the PAGE. The FILE's repl8ce keys are applied to this PAGE, meaning that you can do things like:
+
+	PAGETITLE=##ARTICLETITLE##
+
+Where the value of ##ARTICLETITLE## is set by a FILE.
+
+Then, this PAGE's content repl8ce keys are applied to the PREVIEW. This PREVIEW is then put in the INDEX. 
+
+PREVIEWs are added to the INDEX in alphabetical order, not chronological.

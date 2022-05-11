@@ -1,0 +1,5 @@
+	neo
+
+Uploads all the output files to neocities.
+For it to work, there must be a file named .templ8rc in your user directory.
+.templ8rc must contain an API key for your website and nothing else.
