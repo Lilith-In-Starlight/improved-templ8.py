@@ -58,7 +58,7 @@ example paragraph with some html stuff
 ```html
 <html>
   <body>
-     ##CONTENT##
+	 ##CONTENT##
   </body>
 </html>
 ```
@@ -67,7 +67,7 @@ example paragraph with some html stuff
 ```html
 <html>
   <body>
-     <p>example paragraph with some html stuff</p>
+	 <p>example paragraph with some html stuff</p>
   </body>
 </html>
 ```
