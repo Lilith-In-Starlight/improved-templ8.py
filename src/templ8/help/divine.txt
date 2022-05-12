@@ -1,8 +1,0 @@
-	divine
-	
-Generates a website from a project in the output folder. Core files are renamable.
-
-See: 
-	help core_renaming
-	help repl8ce
-	help custombase

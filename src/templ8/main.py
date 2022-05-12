@@ -7,6 +7,7 @@ from templ8.genesis import genesis
 from templ8.blessing import makedir
 from templ8.pandoc import pandoc
 from templ8.neo import neo
+from templ8.help_args import help_cmd
 import pkgutil
 
 DEITY_PATH = "d8y"
@@ -30,11 +31,10 @@ def help(cmd=""):
 		print("")
 	else:
 		path = os.path.join("help", cmd)
-		data = pkgutil.get_data(__name__, os.path.join("help", cmd + ".txt"))
 		print("\n")
 		print("=      == = ==  =  = ============ == = =   =         =")
 		print("\n")
-		print(str(data, 'utf-8'))
+		print(help_cmd[cmd])
 		print("\n")
 		print("==     == ==== =  = ===== ======== == = =   ===      =")
 		print("\n")

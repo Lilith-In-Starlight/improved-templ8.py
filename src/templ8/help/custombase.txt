@@ -1,3 +1,0 @@
-	Custom Templates
-
-It's possible to give a specific file a template using the CUSTOMBASE repl8ce key, making its value be the path to the template, from the root of the project.
