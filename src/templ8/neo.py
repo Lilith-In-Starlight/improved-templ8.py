@@ -18,7 +18,6 @@ def neo():
 		for file in files:
 			path = Path(pa.join(subdir, file))
 			from_root = Path(*path.parts[1:])
-			print(from_root)
 			fl[str(from_root).replace(os.sep, '/')] = open(path, "rb").read()
 	endpoint = f"https://neocities.org/api/upload"
 	response = requests.post(
