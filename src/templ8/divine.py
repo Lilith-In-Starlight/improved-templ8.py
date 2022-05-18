@@ -16,6 +16,12 @@ def divine():
 			path = os.path.join(subdir, dir).replace(state.input_folder, state.output_folder, 1)
 			makedir(path)
 		
+		dir_replace = {}
+		# Find a global repl8ce thing
+		if "repl8ce" in files:
+			path = os.path.join(subdir, "repl8ce")
+			mod_replaces(dir_replace, open(path, "r").read())
+		
 		# Process the files
 		for file in files:
 			path = os.path.join(subdir, file)
@@ -51,6 +57,8 @@ def divine():
 					if not in_txignore:
 						# Process repl8ce
 						filerepl = state.replacements.copy()
+						for i in dir_replace:
+							filerepl[i] = dir_replace[i]
 						mod_replaces(filerepl, file_headers)
 						
 						
@@ -78,7 +86,7 @@ def divine():
 					
 					
 					
-			elif not os.path.exists(outpath):
+			else:
 				shutil.copy(path, outpath)
 	
 

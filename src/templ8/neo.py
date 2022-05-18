@@ -16,9 +16,11 @@ def neo():
 	fl = {}
 	for subdir, dirs, files in os.walk(state.output_folder):
 		for file in files:
-			path = Path(pa.join(subdir, file))
-			from_root = Path(*path.parts[1:])
-			fl[str(from_root).replace(os.sep, '/')] = open(path, "rb").read()
+			if os.path.splitext(file)[1] != "":
+				print(file)
+				path = Path(pa.join(subdir, file))
+				from_root = Path(*path.parts[1:])
+				fl[str(from_root).replace(os.sep, '/')] = open(path, "rb").read()
 	endpoint = f"https://neocities.org/api/upload"
 	response = requests.post(
 		endpoint,
@@ -27,6 +29,7 @@ def neo():
 	)
 
 	print("Response: ", response.status_code)
+	print("Response: ", response.text)
 	
 
 			

@@ -137,5 +137,7 @@ All multiline keys must go after every line key. The following is considered to 
 
 To set the default values of keys on repl8ce, simply use this same notation, without the -BEGINFILE- part. Default values can also be empty strings.
 
-The ##CONTENT## keyword is actually a repl8ce key, it's just that its value is determined by the software and not by the user. Other key like this one is the ##LINK## key, which exists only in blogs. Fun!""",
+The ##CONTENT## keyword is actually a repl8ce key, it's just that its value is determined by the software and not by the user. Other key like this one is the ##LINK## key, which exists only in blogs. Fun!
+
+You can also have a file called simply 'repl8ce' in a folder of so that all files of that folder have its contents as repl8ce keys. These repl8ce keys are overriden by the files' keys.""",
 }
