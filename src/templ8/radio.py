@@ -5,6 +5,8 @@ import templ8.blessing
 from templ8.blessing import makedir
 from templ8.blessing import mod_replaces
 from templ8.blessing import parse_content
+from templ8.blessing import parse_keys
+import time
 
 # Build the blog
 def radio():
@@ -59,8 +61,8 @@ def radio():
 			# Apply the file's keys to the article page and put in the content
 			article_page = article_page.replace("##CONTENT##", file_content)
 			
-			for key in file_replace:
-				article_page = article_page.replace("##"+key+"##", file_replace[key])
+			parse_keys(article_page, file_replace)
+			
 			
 			
 			# Get the keys and content of this article page
@@ -81,14 +83,29 @@ def radio():
 			
 			
 			current_file_index = current_file_index.replace("##LINK##", 'posts/' + file.replace(".textile", "/index.html"))
-			for key in file_replace:
-				final_page = final_page.replace("##"+key+"##", file_replace[key])
-				current_file_index = current_file_index.replace("##"+key+"##", file_replace[key])
+			
+			final_page = parse_keys(final_page, file_replace)
+			current_file_index = parse_keys(current_file_index, file_replace)
+			
+			final_page = final_page.replace("#!DATE!#", time.ctime(time.time()))
+			current_file_index = current_file_index.replace("#!DATE!#", time.ctime(time.time()))
+			# Out paths 
+			
+			blog_outpath = os.path.join(blog_output, "posts", file.replace(".textile", "/index.html"))
+			makedir(os.path.join(blog_output, "posts", file.replace(".textile", "")))
+			
+			# Creation date keys
+			if os.path.exists(blog_outpath):
+				final_page = final_page.replace("#!CDATE!#", time.ctime(os.path.getctime(blog_outpath)))
+				current_file_index = current_file_index.replace("#!CDATE!#", time.ctime(os.path.getctime(blog_outpath)))
+			else:
+				final_page = final_page.replace("#!CDATE!#", time.ctime(time.time()))
+				current_file_index = current_file_index.replace("#!CDATE!#", time.ctime(time.time()))
+			
+			
 			blog_index += current_file_index + "\n"
 			
 			# Save it
-			blog_outpath = os.path.join(blog_output, "posts", file.replace(".textile", "/index.html"))
-			makedir(os.path.join(blog_output, "posts", file.replace(".textile", "")))
 			with open(blog_outpath, "w") as f:
 				f.write(final_page)
 	

@@ -8,6 +8,7 @@ from templ8.blessing import mod_replaces
 from templ8.blessing import parse_content
 from templ8.blessing import into_html
 from templ8.blessing import full_parse
+import time
 
 # Divines a website
 def divine():
@@ -76,27 +77,12 @@ def divine():
 					
 					if not in_txignore:
 						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
-						"""# Process repl8ce
-						filerepl = state.replacements.copy()
-						for i in dir_replace:
-							filerepl[i] = dir_replace[i]
-						mod_replaces(filerepl, file_headers)
 						
 						
-						# Turn the content into HTML
-						contents = parse_content(file_content, file_extension)
-						
-						# Put the content in the base HTML
-						contents = into_html(contents, filerepl, state)
-						
-						# Put the keys there
-						for key in filerepl:
-							if key.startswith("TX-"):
-								contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".textile"))
-							elif key.startswith("MD-"):
-								contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".md"))
-							else:
-								contents = contents.replace("##"+key+"##", filerepl[key])"""
+						if os.path.exists(outhtml):
+							contents = contents.replace("#!CDATE!#", time.ctime(os.path.getctime(outhtml)))
+						else:
+							contents = contents.replace("#!CDATE!#", time.ctime(time.time()))
 						
 						if contents == current_content:
 							continue

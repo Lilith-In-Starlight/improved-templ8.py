@@ -6,7 +6,7 @@
 		<h1>This is a test</h1>
 		
 		##CONTENT##
-		
+		#!CDATE!#
 		$$FOR_KEY$$
 		AA
 		$$END$$

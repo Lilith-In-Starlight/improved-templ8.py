@@ -1,7 +1,7 @@
 import os
 import textile
 import pypandoc
-from datetime import date
+import time
 
 TEMPL8_ASCII = """
     ###                                                                 
@@ -261,7 +261,7 @@ def into_html(content, keys, state):
 	base = base.replace("##CONTENT##", content)
 	
 	# Replace special keys
-	base = base.replace("#!DATE!#", str(date.today()))
+	base = base.replace("#!DATE!#", time.ctime(time.time()))
 	
 	return base
 
@@ -289,4 +289,20 @@ def full_parse(state, file_content, file_extension, file_headers, dir_replace):
 			contents = contents.replace("##"+key+"##", filerepl[key])
 	
 	return contents
+
+
+def parse_keys(page, keys):
+	base = page
+	tokens = parts(base)
+	if len(tokens) != 0:
+		base = funkeys(base, keys, tokens)
 	
+	for key in keys:
+		if key.startswith("TX-"):
+			base = base.replace("##"+key+"##", parse_content(keys[key], ".textile"))
+		elif key.startswith("MD-"):
+			base = base.replace("##"+key+"##", parse_content(keys[key], ".md"))
+		else:
+			base = base.replace("##"+key+"##", keys[key])
+	
+	return base
