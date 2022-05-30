@@ -233,11 +233,17 @@ def funkeys(input_base, keys, tokens):
 			for i in delbars:
 				if start > i[0]:
 					start -= i[1]
-				if start > i[0]:
-					start -= i[1]
-			for i in range(for_duplication[tk][1]-1):
-				out = out[:end] + out[start:]
-				delbars.append([start, start - end])
+				if end > i[0]:
+					end -= i[1]
+			beginning = out[:start]
+			content = out[start:end]
+			ending = out[end:]
+			out = beginning
+			print(out)
+			for i in range(for_duplication[tk][1]):
+				out += content.replace("%%", f"{i}")
+			delbars.append([start, -len(content)*(for_duplication[tk][1]-1)])
+			out += ending
 	
 	return out
 	

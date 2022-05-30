@@ -6,9 +6,16 @@
 		<h1>This is a test</h1>
 		
 		##CONTENT##
-		#!CDATE!#
+		
 		$$FOR_KEY$$
-		AA
+		<p>AV ##KEY%%##</p>
+		$$FOR_KEY$$
+		<p>AA ##KEY%%##</p>
+		$$END$$
+		$$END$$
+		
+		$$FOR_KEeY$$
+		<p>Ab ##KEeY%%##</p>
 		$$END$$
 	</body>
 </html>

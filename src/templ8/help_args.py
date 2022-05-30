@@ -100,7 +100,9 @@ These are the core rename keys and the files they map to:\n
 
 	"custombase": """	Custom Templates
 
-It's possible to give a specific file a template using the CUSTOMBASE repl8ce key, making its value be the path to the template, from the root of the project.""",
+It's possible to give a specific file a template using the CUSTOMBASE repl8ce key, making its value be the path to the template, from the root of the project.
+
+See: help repl8ce""",
 
 	"repl8ce": """	repl8ce
 
@@ -139,5 +141,37 @@ To set the default values of keys on repl8ce, simply use this same notation, wit
 
 The ##CONTENT## keyword is actually a repl8ce key, it's just that its value is determined by the software and not by the user. Other key like this one is the ##LINK## key, which exists only in blogs. Fun!
 
-You can also have a file called simply 'repl8ce' in a folder of so that all files of that folder have its contents as repl8ce keys. These repl8ce keys are overriden by the files' keys.""",
+You can also have a file called simply 'repl8ce' in a folder of so that all files of that folder have its contents as repl8ce keys. These repl8ce keys are overriden by the files' keys.
+
+When a tag's name starts with MD- or TX-, templ8 will apply the corresponding markup to the tag before doing the repl8ce operations.
+
+See:
+	help ifkeys
+	help forkeys
+	help datekeys""",
+
+	"ifkeys": """	IFKEYs
+
+An IFKEY is a type of key that tells templ8 to remove part of the template if a repl8ce tag is not present. The repl8ce tag can then be used as a repl8ce tag as one would normally do.
+
+An IFKEY starts with the $$IF_YourKey$$ keyword, replacing YourKey with the desired repl8ce key. YourKey is the value that will be checked for. An IFKEY ends with the $$END$$ keyword.
+
+If YourKey isn't present, everything between the beginning of the IFKEY and the END will be erased. You can use ##YOURKEY## as normal.
+
+See:
+	help repl8ce
+	help forkeys""",
+	"forkeys": """	FORKEYs
+
+A FORKEY is a type of key that tells templ8 to duplicate part of the template if several variations of a repl8ce tag are present. The repl8ce tags can be used as notmal tags as well.
+
+A FORKEY starts with the $$FOR_YourKey$$ keyword and ends at the $$END$$ keyword. When processing a file, it'll check for all the keys starting from YOURKEY0 and adding one to 
+that number until it can't find any more keys. Inside a FORKEY, you can use %% as a way to tell templ8 to put the iteration number there. This can be used in tags ##LIKE-THIS##.
+
+See:
+	help repl8ce
+	help ifkeys""",
+	"datekeys": """	Date Keys
+
+You can use #!DATE!# and #!CDATE!# to ask templ8 to replace some part of a file or a template with the current date or the creation date of the file, respectively.""",
 }
