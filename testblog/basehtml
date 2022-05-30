@@ -4,8 +4,11 @@
 	</head>
 	<body>
 		<h1>This is a test</h1>
-		$$FOR_KEY$$
+		
 		##CONTENT##
+		
+		$$FOR_KEY$$
+		AA
 		$$END$$
 	</body>
 </html>

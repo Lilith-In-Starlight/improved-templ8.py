@@ -1,6 +1,7 @@
 import os
 import textile
 import pypandoc
+from datetime import date
 
 TEMPL8_ASCII = """
     ###                                                                 
@@ -171,7 +172,6 @@ def funkeys(input_base, keys, tokens):
 					for_key = ctoken.text[len(forkey_start):-2]
 					n = 0
 					while True:
-						print(for_key + str(n) in keys)
 						if for_key + str(n) in keys:
 							if n == 0:
 								for_deletion.append(ctoken)
@@ -243,16 +243,50 @@ def funkeys(input_base, keys, tokens):
 	
 
 def into_html(content, keys, state):
+	# By default, use the default base
 	base = state.basehtml_content
+	# Use a custombase if it's specified
 	if "CUSTOMBASE" in keys:
 		if os.path.exists(keys["CUSTOMBASE"]):
 			base = open(keys["CUSTOMBASE"], "r").read()
 		else:
 			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
 	
+	# Tokenize for function keys and apply them
 	tokens = parts(base)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens)
+		
+	# Put the content in the file
+	base = base.replace("##CONTENT##", content)
 	
+	# Replace special keys
+	base = base.replace("#!DATE!#", str(date.today()))
 	
-	return base.replace("##CONTENT##", content)
+	return base
+
+
+def full_parse(state, file_content, file_extension, file_headers, dir_replace):
+	# Process repl8ce
+	filerepl = state.replacements.copy()
+	for i in dir_replace:
+		filerepl[i] = dir_replace[i]
+	mod_replaces(filerepl, file_headers)
+	
+	# Turn the content into HTML
+	contents = parse_content(file_content, file_extension)
+	
+	# Put the content in the base HTML
+	contents = into_html(contents, filerepl, state)
+	
+	# Put the keys there
+	for key in filerepl:
+		if key.startswith("TX-"):
+			contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".textile"))
+		elif key.startswith("MD-"):
+			contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".md"))
+		else:
+			contents = contents.replace("##"+key+"##", filerepl[key])
+	
+	return contents
+	

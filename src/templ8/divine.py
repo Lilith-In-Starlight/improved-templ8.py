@@ -7,6 +7,7 @@ from templ8.blessing import makedir
 from templ8.blessing import mod_replaces
 from templ8.blessing import parse_content
 from templ8.blessing import into_html
+from templ8.blessing import full_parse
 
 # Divines a website
 def divine():
@@ -74,7 +75,8 @@ def divine():
 						  
 					
 					if not in_txignore:
-						# Process repl8ce
+						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
+						"""# Process repl8ce
 						filerepl = state.replacements.copy()
 						for i in dir_replace:
 							filerepl[i] = dir_replace[i]
@@ -85,18 +87,16 @@ def divine():
 						contents = parse_content(file_content, file_extension)
 						
 						# Put the content in the base HTML
-						"""if not "CUSTOMBASE" in filerepl:
-							contents = state.basehtml_content.replace("##CONTENT##", contents)
-						else:
-							if os.path.exists(filerepl["CUSTOMBASE"]):
-								contents = open(filerepl["CUSTOMBASE"], "r").read().replace("##CONTENT##", contents)
-							else:
-								raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")"""
 						contents = into_html(contents, filerepl, state)
 						
 						# Put the keys there
 						for key in filerepl:
-							contents = contents.replace("##"+key+"##", filerepl[key])
+							if key.startswith("TX-"):
+								contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".textile"))
+							elif key.startswith("MD-"):
+								contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".md"))
+							else:
+								contents = contents.replace("##"+key+"##", filerepl[key])"""
 						
 						if contents == current_content:
 							continue
