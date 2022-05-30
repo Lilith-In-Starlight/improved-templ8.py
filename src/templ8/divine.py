@@ -6,6 +6,7 @@ import templ8.programstate
 from templ8.blessing import makedir
 from templ8.blessing import mod_replaces
 from templ8.blessing import parse_content
+from templ8.blessing import into_html
 
 # Divines a website
 def divine():
@@ -84,13 +85,14 @@ def divine():
 						contents = parse_content(file_content, file_extension)
 						
 						# Put the content in the base HTML
-						if not "CUSTOMBASE" in filerepl:
+						"""if not "CUSTOMBASE" in filerepl:
 							contents = state.basehtml_content.replace("##CONTENT##", contents)
 						else:
 							if os.path.exists(filerepl["CUSTOMBASE"]):
 								contents = open(filerepl["CUSTOMBASE"], "r").read().replace("##CONTENT##", contents)
 							else:
-								raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
+								raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")"""
+						contents = into_html(contents, filerepl, state)
 						
 						# Put the keys there
 						for key in filerepl:

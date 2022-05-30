@@ -77,11 +77,6 @@ def mod_replaces(input_replaces, header):
 				input_replaces[current_multikey] += keyval[0] + "\n"
 			else:
 				raise Exception("what")
-				
-					
-					
-					
-				
 
 
 def parse_content(content, ext):
@@ -93,18 +88,6 @@ def parse_content(content, ext):
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
 		return ""
 
-
-def into_html(content, keys):
-	base = state.basehtml_content
-	if "CUSTOMBASE" in keys:
-		if os.path.exists(keys["CUSTOMBASE"]):
-			base = open(keys["CUSTOMBASE"], "r").read()
-		else:
-			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
-	
-	
-	
-	output = base.replace("##CONTENT##", content)
 	
 ifkey_start = "$$IF_"
 fkey_end = "$$END$$"
@@ -145,21 +128,21 @@ def parts(input_base):
 	return tokens
 
 
-
-
-
 def funkeys(input_base, keys, tokens):
+	out = input_base
 	tokpos = sorted(tokens.keys())
 	index = 0
 	for_deletion = []
 	while True:
+		if index >= len(tokpos):
+			break
 		ctoken = tokens[tokpos[index]]
 		if tokpos[index+1] in tokens:
 			ntoken = tokens[tokpos[index+1]]
 			if ntoken.type == "END":
 				if ctoken.type == "IF":
 					if_key = ctoken.text[len(ifkey_start):-2]
-					if if_key in keys:
+					if if_key in keys and keys[if_key] != "":
 						for_deletion.append(ctoken)
 						for_deletion.append(ntoken)
 					else:
@@ -174,38 +157,53 @@ def funkeys(input_base, keys, tokens):
 			break
 	
 	
-	delclumps = [for_deletion[0]]
-	
-	old_delclumps = for_deletion
-	while True:
-		index = 0
-		for tk in old_delclumps:
-			ntk_start = tk.start
-			ntk_end = tk.end
-			if delclumps[index].start >= ntk_start and delclumps[index].end <= ntk_end:
-				delclumps[index].start = ntk_start
-				delclumps[index].end = ntk_end
+	if len(for_deletion) > 0:
+		delclumps = [for_deletion[0]]
+		
+		old_delclumps = for_deletion
+		while True:
+			index = 0
+			for tk in old_delclumps:
+				ntk_start = tk.start
+				ntk_end = tk.end
+				if delclumps[index].start >= ntk_start and delclumps[index].end <= ntk_end:
+					delclumps[index].start = ntk_start
+					delclumps[index].end = ntk_end
+				else:
+					delclumps.append(Token(ntk_end, "CONTENT", "AAA", ntk_start))
+					index += 1
+			if old_delclumps == delclumps:
+				break
 			else:
-				delclumps.append(Token(ntk_end, "CONTENT", "AAA", ntk_start))
-				index += 1
-		if old_delclumps == delclumps:
-			break
-		else:
-			old_delclumps = delclumps
-			delclumps = [old_delclumps[0]]
-			
+				old_delclumps = delclumps
+				delclumps = [old_delclumps[0]]
+				
+		delbars = []
+		for tk in delclumps:
+			start = tk.start
+			end = tk.end
+			for i in delbars:
+				if start > i[0]:
+					start -= i[1]
+				if end > i[0]:
+					end -= i[1]
+			out = out[:start] + out[end:]
+			delbars.append([start, end - start])
 	
-	
-	delbars = []
-	out = input_base
-	for tk in delclumps:
-		start = tk.start
-		end = tk.end
-		for i in delbars:
-			if start > i[0]:
-				start -= i[1]
-			if end > i[0]:
-				end -= i[1]
-		out = out[:start] + out[end:]
-		delbars.append([start, end - start])
 	return out
+	
+
+def into_html(content, keys, state):
+	base = state.basehtml_content
+	if "CUSTOMBASE" in keys:
+		if os.path.exists(keys["CUSTOMBASE"]):
+			base = open(keys["CUSTOMBASE"], "r").read()
+		else:
+			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
+	
+	tokens = parts(base)
+	if len(tokens) != 0:
+		base = funkeys(base, keys, tokens)
+	
+	
+	return base.replace("##CONTENT##", content)
