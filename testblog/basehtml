@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<h1>This is a test</h1>
-		$$IF_KEY$$
+		$$FOR_KEY$$
 		##CONTENT##
 		$$END$$
 	</body>

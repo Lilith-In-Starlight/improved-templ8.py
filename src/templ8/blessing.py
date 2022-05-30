@@ -90,6 +90,7 @@ def parse_content(content, ext):
 
 	
 ifkey_start = "$$IF_"
+forkey_start = "$$FOR_"
 fkey_end = "$$END$$"
 
 
@@ -108,23 +109,37 @@ class Token:
 def parts(input_base):
 	start = 0
 	tokens = {}
-	while input_base.find(ifkey_start, start) != -1 or input_base.find(fkey_end, start) != -1:
+	ifk_find = input_base.find(ifkey_start, start)
+	end_find = input_base.find(fkey_end, start)
+	for_find = input_base.find(forkey_start, start)
+	while ifk_find != -1 or end_find != -1 or for_find != -1:
 		token_start = 0
 		token_end = 0
 		token_type = "void"
-		if input_base.find(ifkey_start, start) < input_base.find(fkey_end, start) and input_base.find(ifkey_start, start) != -1:
+		top = len(input_base)
+		for i in [ifk_find, end_find, for_find]:
+			if i < top and i != -1:
+				top = i
+		if top == ifk_find:
 			token_start = input_base.find(ifkey_start, start)
 			token_end = input_base.find("$$", token_start + 1) + 2
 			token_type = "IF"
-		else:
+		elif top == end_find:
 			token_start = input_base.find(fkey_end, start)
 			token_end = token_start + len(fkey_end)
 			token_type = "END"
+		elif top == for_find:
+			token_start = input_base.find(forkey_start, start)
+			token_end = input_base.find("$$", token_start + 1) + 2
+			token_type = "FOR"
 			
-		
 		tokens[token_start] = Token(token_end, token_type, input_base[token_start:token_end], token_start)
-		
 		start = token_end 
+				
+		
+		ifk_find = input_base.find(ifkey_start, start)
+		end_find = input_base.find(fkey_end, start)
+		for_find = input_base.find(forkey_start, start)
 	return tokens
 
 
@@ -133,6 +148,7 @@ def funkeys(input_base, keys, tokens):
 	tokpos = sorted(tokens.keys())
 	index = 0
 	for_deletion = []
+	for_duplication = {}
 	while True:
 		if index >= len(tokpos):
 			break
@@ -151,12 +167,33 @@ def funkeys(input_base, keys, tokens):
 					tokpos.pop(index)
 					tokpos.pop(index)
 					index -= 1
+				elif ctoken.type == "FOR":
+					for_key = ctoken.text[len(forkey_start):-2]
+					n = 0
+					while True:
+						print(for_key + str(n) in keys)
+						if for_key + str(n) in keys:
+							if n == 0:
+								for_deletion.append(ctoken)
+								for_deletion.append(ntoken)
+							if not ctoken.start in for_duplication:
+								for_duplication[ctoken.start] = [Token(ntoken.start-1, "CONTENT", "aaa", ctoken.end), 0]
+							for_duplication[ctoken.start][1] += 1
+							n += 1
+						else:
+							if n == 0:
+								for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
+							break
+					
+					tokpos.pop(index)
+					tokpos.pop(index)
+					index -= 1
 			else:
 				index += 1
 		if index >= len(tokpos) - 1:
 			break
 	
-	
+	delbars = []
 	if len(for_deletion) > 0:
 		delclumps = [for_deletion[0]]
 		
@@ -178,7 +215,6 @@ def funkeys(input_base, keys, tokens):
 				old_delclumps = delclumps
 				delclumps = [old_delclumps[0]]
 				
-		delbars = []
 		for tk in delclumps:
 			start = tk.start
 			end = tk.end
@@ -189,6 +225,19 @@ def funkeys(input_base, keys, tokens):
 					end -= i[1]
 			out = out[:start] + out[end:]
 			delbars.append([start, end - start])
+	
+	if len(for_duplication) > 0:
+		for tk in for_duplication:
+			start = for_duplication[tk][0].start
+			end = for_duplication[tk][0].end
+			for i in delbars:
+				if start > i[0]:
+					start -= i[1]
+				if start > i[0]:
+					start -= i[1]
+			for i in range(for_duplication[tk][1]-1):
+				out = out[:end] + out[start:]
+				delbars.append([start, start - end])
 	
 	return out
 	
