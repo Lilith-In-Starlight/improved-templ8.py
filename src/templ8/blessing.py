@@ -61,7 +61,9 @@ def mod_replaces(input_replaces, header):
 	
 	for i in header.split("\n"):
 		# Split it in the single line way
-		keyval = i.split("=", 1)
+		keyval = [i]
+		if not multiline:
+			keyval = i.split("=", 1)
 		# If we're not processing multilines, and the current line is single line, set key
 		if len(keyval) == 2 and not multiline:
 			input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
@@ -91,6 +93,7 @@ def parse_content(content, ext):
 
 	
 ifkey_start = "$$IF_"
+ifnkey_start = "$$IF!"
 forkey_start = "$$FOR_"
 fkey_end = "$$END$$"
 
@@ -111,6 +114,7 @@ def parts(input_base):
 	start = 0
 	tokens = {}
 	ifk_find = input_base.find(ifkey_start, start)
+	ifn_find = input_base.find(ifnkey_start, start)
 	end_find = input_base.find(fkey_end, start)
 	for_find = input_base.find(forkey_start, start)
 	while ifk_find != -1 or end_find != -1 or for_find != -1:
@@ -118,7 +122,7 @@ def parts(input_base):
 		token_end = 0
 		token_type = "void"
 		top = len(input_base)
-		for i in [ifk_find, end_find, for_find]:
+		for i in [ifk_find, end_find, for_find, ifn_find]:
 			if i < top and i != -1:
 				top = i
 		if top == ifk_find:
@@ -133,12 +137,17 @@ def parts(input_base):
 			token_start = input_base.find(forkey_start, start)
 			token_end = input_base.find("$$", token_start + 1) + 2
 			token_type = "FOR"
+		elif top == ifn_find:
+			token_start = input_base.find(ifnkey_start, start)
+			token_end = input_base.find("$$", token_start + 1) + 2
+			token_type = "IFN"
 			
 		tokens[token_start] = Token(token_end, token_type, input_base[token_start:token_end], token_start)
 		start = token_end 
 				
 		
 		ifk_find = input_base.find(ifkey_start, start)
+		ifn_find = input_base.find(ifnkey_start, start)
 		end_find = input_base.find(fkey_end, start)
 		for_find = input_base.find(forkey_start, start)
 	return tokens
@@ -158,12 +167,25 @@ def funkeys(input_base, keys, tokens):
 			ntoken = tokens[tokpos[index+1]]
 			if ntoken.type == "END":
 				if ctoken.type == "IF":
-					if_key = ctoken.text[len(ifkey_start):-2]
-					if if_key in keys and keys[if_key] != "":
-						for_deletion.append(ctoken)
-						for_deletion.append(ntoken)
-					else:
-						for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
+					if ctoken.text.find("%%") == -1:
+						if_key = ctoken.text[len(ifkey_start):-2]
+						if if_key in keys and keys[if_key] != "":
+							for_deletion.append(ctoken)
+							for_deletion.append(ntoken)
+						else:
+							for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
+					
+					tokpos.pop(index)
+					tokpos.pop(index)
+					index -= 1
+				elif ctoken.type == "IFN":
+					if ctoken.text.find("%%") == -1:
+						if_key = ctoken.text[len(ifkey_start):-2]
+						if not if_key in keys or keys[if_key] == "":
+							for_deletion.append(ctoken)
+							for_deletion.append(ntoken)
+						else:
+							for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
 					
 					tokpos.pop(index)
 					tokpos.pop(index)
@@ -239,7 +261,6 @@ def funkeys(input_base, keys, tokens):
 			content = out[start:end]
 			ending = out[end:]
 			out = beginning
-			print(out)
 			for i in range(for_duplication[tk][1]):
 				out += content.replace("%%", f"{i}")
 			delbars.append([start, -len(content)*(for_duplication[tk][1]-1)])
@@ -259,6 +280,9 @@ def into_html(content, keys, state):
 			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
 	
 	# Tokenize for function keys and apply them
+	tokens = parts(base)
+	if len(tokens) != 0:
+		base = funkeys(base, keys, tokens)
 	tokens = parts(base)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens)
@@ -299,6 +323,9 @@ def full_parse(state, file_content, file_extension, file_headers, dir_replace):
 
 def parse_keys(page, keys):
 	base = page
+	tokens = parts(base)
+	if len(tokens) != 0:
+		base = funkeys(base, keys, tokens)
 	tokens = parts(base)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens)
