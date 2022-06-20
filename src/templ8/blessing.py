@@ -73,8 +73,7 @@ def mod_replaces(input_replaces, header):
 			if keyval[0].startswith(";;"):
 				multiline = True
 				current_multikey = keyval[0].replace(";;", "", 1)
-				if not current_multikey in input_replaces:
-					input_replaces[current_multikey] = ""
+				input_replaces[current_multikey] = ""
 			# If it's not, continue the current multiline
 			elif multiline:
 				input_replaces[current_multikey] += keyval[0] + "\n"

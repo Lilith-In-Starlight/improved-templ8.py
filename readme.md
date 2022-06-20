@@ -25,7 +25,7 @@ This roadmap is as chronologically ordered as homestuck (i'm _pretty sure_ that 
 - [x] Customizing "core" file and directory names of a project
 - [X] Change a specific page's basehtml
 - [X] Markdown support
-- [ ] IFKEYs for further basetemplate flexibility
+- [X] IFKEYs for further basetemplate flexibility (UNSTABLE)
 - [X] Blogging
 - [ ] RSS and ASS feed generating tool
 
