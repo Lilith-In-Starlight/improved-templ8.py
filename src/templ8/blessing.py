@@ -68,7 +68,7 @@ def mod_replaces(input_replaces, header):
 		if len(keyval) == 2 and not multiline:
 			input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
 		# If it's not a valid single line
-		elif len(keyval) == 1 and keyval[0] != "":
+		elif len(keyval) == 1:
 			# If it's a valid multiline, start a new multiline tag
 			if keyval[0].startswith(";;"):
 				multiline = True
@@ -77,7 +77,7 @@ def mod_replaces(input_replaces, header):
 			# If it's not, continue the current multiline
 			elif multiline:
 				input_replaces[current_multikey] += keyval[0] + "\n"
-			else:
+			elif not keyval[0] == "":
 				raise Exception("what")
 
 
