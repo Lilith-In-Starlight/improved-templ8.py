@@ -2,6 +2,7 @@ import os
 import textile
 import pypandoc
 import time
+import re
 
 TEMPL8_ASCII = """
     ###                                                                 
@@ -98,175 +99,117 @@ fkey_end = "$$END$$"
 
 
 class Token:
-	def __init__(self, end, type, text, start):
+	def __init__(self, type, start, end):
 		self.end = end
 		self.type = type
-		self.text = text
 		self.start = start
+	def text(self, input_base):
+		return input_base[self.start:self.end]
 	def __repr__(self):
-		return f"[ C: {self.start} - {self.end} T: {self.type} Tx: {self.text} ]"
+		return f"[ C: {self.start} - {self.end} T: {self.type} ]"
 	def __eq__(self, other):
 		return (self.end == other.end and self.start == other.start)
 
+tokens = [
+	("if", re.compile(r"\$ ?IF (NOT )?[A-Z0-9-_%]+")),
+	("for", re.compile(r"\$ ?FOR [A-Z0-9-_%]+")),
+	("end", re.compile(r"\$ ?END")),
+	# ("tag", re.compile(r"\#\# ?[A-Z0-9-_%]+ ?(\#\#)?")),
+]
+
+openers = ["if", "for"]
+
+
+def get_charpos(i, str):
+	lines = str.splitlines()
+	last_pos = 0
+	for j in range(len(lines)):
+		last_pos += len(lines[j])
+		if last_pos > i:
+			last_pos -= len(lines[j])
+			return (j + 1, i-last_pos-j+1)
+
 
 def parts(input_base):
-	start = 0
-	tokens = {}
-	ifk_find = input_base.find(ifkey_start, start)
-	ifn_find = input_base.find(ifnkey_start, start)
-	end_find = input_base.find(fkey_end, start)
-	for_find = input_base.find(forkey_start, start)
-	while ifk_find != -1 or end_find != -1 or for_find != -1:
-		token_start = 0
-		token_end = 0
-		token_type = "void"
-		top = len(input_base)
-		for i in [ifk_find, end_find, for_find, ifn_find]:
-			if i < top and i != -1:
-				top = i
-		if top == ifk_find:
-			token_start = input_base.find(ifkey_start, start)
-			token_end = input_base.find("$$", token_start + 1) + 2
-			token_type = "IF"
-		elif top == end_find:
-			token_start = input_base.find(fkey_end, start)
-			token_end = token_start + len(fkey_end)
-			token_type = "END"
-		elif top == for_find:
-			token_start = input_base.find(forkey_start, start)
-			token_end = input_base.find("$$", token_start + 1) + 2
-			token_type = "FOR"
-		elif top == ifn_find:
-			token_start = input_base.find(ifnkey_start, start)
-			token_end = input_base.find("$$", token_start + 1) + 2
-			token_type = "IFN"
-			
-		tokens[token_start] = Token(token_end, token_type, input_base[token_start:token_end], token_start)
-		start = token_end 
-				
-		
-		ifk_find = input_base.find(ifkey_start, start)
-		ifn_find = input_base.find(ifnkey_start, start)
-		end_find = input_base.find(fkey_end, start)
-		for_find = input_base.find(forkey_start, start)
-	return tokens
-
-
-def funkeys(input_base, keys, tokens):
-	out = input_base
-	tokpos = sorted(tokens.keys())
-	index = 0
-	for_deletion = []
-	for_duplication = {}
+	all_lexes = []
+	last_end = 0
 	while True:
-		if index >= len(tokpos):
-			break
-		ctoken = tokens[tokpos[index]]
-		if tokpos[index+1] in tokens:
-			ntoken = tokens[tokpos[index+1]]
-			if ntoken.type == "END":
-				if ctoken.type == "IF":
-					if ctoken.text.find("%%") == -1:
-						if_key = ctoken.text[len(ifkey_start):-2]
-						if if_key in keys and keys[if_key] != "":
-							for_deletion.append(ctoken)
-							for_deletion.append(ntoken)
-						else:
-							for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
-					
-					tokpos.pop(index)
-					tokpos.pop(index)
-					index -= 1
-				elif ctoken.type == "IFN":
-					if ctoken.text.find("%%") == -1:
-						if_key = ctoken.text[len(ifkey_start):-2]
-						if not if_key in keys or keys[if_key] == "":
-							for_deletion.append(ctoken)
-							for_deletion.append(ntoken)
-						else:
-							for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
-					
-					tokpos.pop(index)
-					tokpos.pop(index)
-					index -= 1
-				elif ctoken.type == "FOR":
-					for_key = ctoken.text[len(forkey_start):-2]
-					n = 0
-					while True:
-						if for_key + str(n) in keys:
-							if n == 0:
-								for_deletion.append(ctoken)
-								for_deletion.append(ntoken)
-							if not ctoken.start in for_duplication:
-								for_duplication[ctoken.start] = [Token(ntoken.start-1, "CONTENT", "aaa", ctoken.end), 0]
-							for_duplication[ctoken.start][1] += 1
-							n += 1
-						else:
-							if n == 0:
-								for_deletion.append(Token(ntoken.end, "CONTENT", "aaa", tokpos[index]))
-							break
-					
-					tokpos.pop(index)
-					tokpos.pop(index)
-					index -= 1
-			else:
-				index += 1
-		if index >= len(tokpos) - 1:
-			break
-	
-	delbars = []
-	if len(for_deletion) > 0:
-		delclumps = [for_deletion[0]]
+		earliest = Token("nil", -1, -1)
+		for name, gex in tokens:
+			x = gex.search(input_base, last_end)
+			if x and (x.span()[0] < earliest.start or earliest.type == "nil"):
+				earliest = Token(name, x.span()[0], x.span()[1])
 		
-		old_delclumps = for_deletion
-		while True:
-			index = 0
-			for tk in old_delclumps:
-				ntk_start = tk.start
-				ntk_end = tk.end
-				if delclumps[index].start >= ntk_start and delclumps[index].end <= ntk_end:
-					delclumps[index].start = ntk_start
-					delclumps[index].end = ntk_end
-				else:
-					delclumps.append(Token(ntk_end, "CONTENT", "AAA", ntk_start))
-					index += 1
-			if old_delclumps == delclumps:
-				break
-			else:
-				old_delclumps = delclumps
-				delclumps = [old_delclumps[0]]
-				
-		for tk in delclumps:
-			start = tk.start
-			end = tk.end
-			for i in delbars:
-				if start > i[0]:
-					start -= i[1]
-				if end > i[0]:
-					end -= i[1]
-			out = out[:start] + out[end:]
-			delbars.append([start, end - start])
+		if earliest.type != "nil":
+			all_lexes.append(Token("put", last_end, earliest.start))
+			all_lexes.append(earliest)	
+			last_end = earliest.end
+		else:
+			all_lexes.append(Token("put", last_end, len(input_base)))
+			break
 	
-	if len(for_duplication) > 0:
-		for tk in for_duplication:
-			start = for_duplication[tk][0].start
-			end = for_duplication[tk][0].end
-			for i in delbars:
-				if start > i[0]:
-					start -= i[1]
-				if end > i[0]:
-					end -= i[1]
-			beginning = out[:start]
-			content = out[start:end]
-			ending = out[end:]
-			out = beginning
-			for i in range(for_duplication[tk][1]):
-				out += content.replace("%%", f"{i}")
-			delbars.append([start, -len(content)*(for_duplication[tk][1]-1)])
-			out += ending
+	# Syntax error checking
+	opens = []
+	for i in all_lexes:
+		if i.type in openers:
+			opens.append(i)
+		elif i.type == "end":
+			opens.pop(-1)
+	if opens != []:
+		errpos = get_charpos(opens[-1].start, input_base)
+		print(f"ERROR: UNCLOSED {opens[-1].type.upper()} AT ({errpos[0]}; {errpos[1]})")
+	return all_lexes
+
+
+def funkeys(input_base, keys, tokens, iter_depth=-1):
+	out = ""
+	iter = 0
 	
+	while iter < len(tokens):
+		tok = tokens[iter]
+		ttext = tok.text(input_base).replace("%%", str(iter_depth))
+		if tok.type == "put":
+			out += ttext.lstrip().rstrip()
+		elif tok.type == "if":
+			clex = ttext.replace("$IF", "").lstrip().rstrip().replace("%%", str(iter_depth))
+			clex = clex.replace("$ IF", "").lstrip().rstrip()
+			do = False
+			if clex.startswith("NOT"):
+				do = not do
+				clex = clex.lstrip("NOT").lstrip()
+			if clex in keys and keys[clex] != "":
+				do = not do
+			if not do:
+				opens = 0
+				for subtok in tokens[iter:]:
+					if subtok.type in openers:
+						opens += 1
+					elif subtok.type == "end":
+						opens -= 1
+					if opens == 0:
+						break
+					iter += 1
+		elif tok.type == "for":
+			clex = ttext.replace("$ FOR", "").lstrip().rstrip().replace("%%", str(iter_depth))
+			clex = clex.replace("$FOR", "").lstrip().rstrip()
+			opens = 0
+			it2 = iter+1
+			fit = 0
+			for subtok in tokens[iter:]:
+				if subtok.type in openers:
+					opens += 1
+				elif subtok.type == "end":
+					opens -= 1
+				if opens == 0:
+					break
+				it2 += 1
+			while f"{clex}{fit}" in keys and keys[f"{clex}{fit}"] != "":
+				out += funkeys(input_base, keys, tokens[iter+1:it2], fit)
+				fit += 1
+			iter = it2-1
+		iter += 1
 	return out
-	
+
 
 def into_html(content, keys, state):
 	# By default, use the default base
@@ -279,9 +222,6 @@ def into_html(content, keys, state):
 			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
 	
 	# Tokenize for function keys and apply them
-	tokens = parts(base)
-	if len(tokens) != 0:
-		base = funkeys(base, keys, tokens)
 	tokens = parts(base)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens)
