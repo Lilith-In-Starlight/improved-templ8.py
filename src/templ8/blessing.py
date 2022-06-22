@@ -274,9 +274,6 @@ def parse_keys(page, keys):
 	tokens = parts(base)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens)
-	tokens = parts(base)
-	if len(tokens) != 0:
-		base = funkeys(base, keys, tokens)
 	
 	for key in keys:
 		if key.startswith("TX-"):
