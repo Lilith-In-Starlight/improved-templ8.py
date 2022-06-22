@@ -180,13 +180,11 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 			ttext = ttext.replace("%"+i, str(iter_variables[i]))
 			
 		if tok.type == "put":
-			out += ttext.lstrip().rstrip()
+			out += ttext.lstrip().rstrip().replace(r"\##", "##").replace(r"\$", "$").replace(r"\$", "$")
 		if tok.type == "tag":
 			tagley = ttext.replace("##", "").lstrip().rstrip()
 			if tagley in keys and tagley != "CONTENT":
 				out += keys[tagley]
-			elif tagley == "CONTENT":
-				out += ttext
 		elif tok.type == "if":
 			clex = ttext.replace("$IF", "").lstrip().rstrip()
 			clex = clex.replace("$ IF", "").lstrip().rstrip()
