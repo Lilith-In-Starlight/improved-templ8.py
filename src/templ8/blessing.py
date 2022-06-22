@@ -240,16 +240,16 @@ def into_html(content, keys, state):
 		else:
 			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
 	
-	# Tokenize for function keys and apply them
-	tokens = parts(base)
-	if len(tokens) != 0:
-		base = funkeys(base, keys, tokens)
-		
 	# Put the content in the file
 	base = base.replace("##CONTENT##", content)
 	
 	# Replace special keys
 	base = base.replace("#!DATE!#", time.ctime(time.time()))
+	
+	# Tokenize for function keys and apply them
+	tokens = parts(base)
+	if len(tokens) != 0:
+		base = funkeys(base, keys, tokens)
 	
 	return base
 
