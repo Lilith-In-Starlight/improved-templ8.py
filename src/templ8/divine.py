@@ -42,16 +42,12 @@ def divine():
 			outpath = path.replace(state.input_folder, state.output_folder, 1)
 			outhtml = outpath.replace(file_extension, ".html", -1)
 			
-			
-			
-			
 			# Only process textile and md files
 			if file_extension in [".textile", ".md"]:
 				current_content = ""
 				if os.path.exists(outhtml):
 					current_content = open(outhtml, "r").read()
 						
-				
 				with open(path, "r") as f:
 					contents = ""
 					# Get the headers and the content
@@ -78,7 +74,6 @@ def divine():
 					if not in_txignore:
 						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
 						
-						
 						if os.path.exists(outhtml):
 							contents = contents.replace("#!CDATE!#", time.ctime(os.path.getctime(outhtml)))
 						else:
@@ -96,8 +91,6 @@ def divine():
 						finalprint += outpath + "\n"
 						with open(outpath, "w") as f:
 							f.write(file_content)
-					
-					
 					
 			else:
 				if os.path.exists(outpath):
