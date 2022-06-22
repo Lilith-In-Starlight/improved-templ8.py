@@ -48,49 +48,48 @@ def divine():
 				if os.path.exists(outhtml):
 					current_content = open(outhtml, "r").read()
 						
-				with open(path, "r") as f:
-					contents = ""
-					# Get the headers and the content
-					file_split = f.read().split("-BEGINFILE-",1)
+				contents = ""
+				# Get the headers and the content
+				file_split = open(path, "r").read().split("-BEGINFILE-",1)
+				file_headers = ""
+				file_content = ""
+				if len(file_split) >= 2:
+					file_headers = file_split[0]
+					file_content = file_split[1]
+				elif len(file_split) == 1:
 					file_headers = ""
-					file_content = ""
-					if len(file_split) >= 2:
-						file_headers = file_split[0]
-						file_content = file_split[1]
-					elif len(file_split) == 1:
-						file_headers = ""
-						file_content = file_split[0]
-					else:
-						raise Exception("Issue regarding -BEGINFILE- markers.")
+					file_content = file_split[0]
+				else:
+					raise Exception("Issue regarding -BEGINFILE- markers.")
+				
+				# Check if the folder is in txignore
+				in_txignore = False
+				for i in state.txignore:
+					if os.path.join(state.input_folder, os.path.normpath(i)) == path or os.path.join(state.input_folder, os.path.normpath(i)) == subdir:
+						in_txignore = True
+						break
+					  
+				
+				if not in_txignore:
+					contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
 					
-					# Check if the folder is in txignore
-					in_txignore = False
-					for i in state.txignore:
-						if os.path.join(state.input_folder, os.path.normpath(i)) == path or os.path.join(state.input_folder, os.path.normpath(i)) == subdir:
-							in_txignore = True
-							break
-						  
-					
-					if not in_txignore:
-						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
-						
-						if os.path.exists(outhtml):
-							contents = contents.replace("#!CDATE!#", time.ctime(os.path.getctime(outhtml)))
-						else:
-							contents = contents.replace("#!CDATE!#", time.ctime(time.time()))
-						
-						if contents == current_content:
-							continue
-						
-						finalprint += outhtml + "\n"
-						with open(outhtml, "w") as f:
-							f.write(contents)
-						
-						
+					if os.path.exists(outhtml):
+						contents = contents.replace("#!CDATE!#", time.ctime(os.path.getctime(outhtml)))
 					else:
-						finalprint += outpath + "\n"
-						with open(outpath, "w") as f:
-							f.write(file_content)
+						contents = contents.replace("#!CDATE!#", time.ctime(time.time()))
+					
+					if contents == current_content:
+						continue
+					
+					finalprint += outhtml + "\n"
+					with open(outhtml, "w") as f:
+						f.write(contents)
+					
+					
+				else:
+					finalprint += outpath + "\n"
+					with open(outpath, "w") as f:
+						f.write(file_content)
 					
 			else:
 				if os.path.exists(outpath):
@@ -98,6 +97,7 @@ def divine():
 						continue
 				finalprint += outpath + "\n"
 				shutil.copy(path, outpath)
+		
 	
 	print(finalprint)
 
