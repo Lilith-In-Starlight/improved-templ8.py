@@ -164,6 +164,7 @@ def parts(input_base):
 	if opens != []:
 		errpos = get_charpos(opens[-1].start, input_base)
 		print(f"ERROR: UNCLOSED {opens[-1].type.upper()} AT ({errpos[0]}; {errpos[1]})")
+		close()
 	return all_lexes
 
 
@@ -180,7 +181,7 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 			ttext = ttext.replace("%"+i, str(iter_variables[i]))
 			
 		if tok.type == "put":
-			out += ttext.lstrip().rstrip().replace(r"\##", "##").replace(r"\$", "$").replace(r"\$", "$")
+			out += ttext.replace(r"\##", "##").replace(r"\$", "$").replace(r"\$", "$").replace("\n\n", "\n")
 		if tok.type == "tag":
 			tagley = ttext.replace("##", "").lstrip().rstrip()
 			if tagley in keys and tagley != "CONTENT":
