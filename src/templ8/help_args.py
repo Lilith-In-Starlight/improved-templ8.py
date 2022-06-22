@@ -154,9 +154,11 @@ See:
 
 An IFKEY is a type of key that tells templ8 to remove part of the template if a repl8ce tag is not present. The repl8ce tag can then be used as a repl8ce tag as one would normally do.
 
-An IFKEY starts with the $$IF_YourKey$$ keyword, replacing YourKey with the desired repl8ce key. YourKey is the value that will be checked for. An IFKEY ends with the $$END$$ keyword.
+An IFKEY starts with the $ IF YOURKEYNAME, replacing YOURKEYNAME with the desired repl8ce key. YOURKEYNAME is the value that will be checked for. An IFKEY ends with the $ END keyword.
 
-If YourKey isn't present, everything between the beginning of the IFKEY and the END will be erased. You can use ##YOURKEY## as normal.
+If you want something to appear when a tag is undefined or set to an empty string, simply do IF NOT YOURKEYNAME.
+
+If YOURKEYNAME isn't present, or is an empty string, everything between the beginning of the IFKEY and the END will be erased. You can use ##YOURKEY## as normal.
 
 See:
 	help repl8ce
@@ -165,8 +167,8 @@ See:
 
 A FORKEY is a type of key that tells templ8 to duplicate part of the template if several variations of a repl8ce tag are present. The repl8ce tags can be used as notmal tags as well.
 
-A FORKEY starts with the $$FOR_YourKey$$ keyword and ends at the $$END$$ keyword. When processing a file, it'll check for all the keys starting from YOURKEY0 and adding one to 
-that number until it can't find any more keys. Inside a FORKEY, you can use %% as a way to tell templ8 to put the iteration number there. This can be used in tags ##LIKE-THIS##.
+A FORKEY starts with the $ FOR YOURKEYNAME, and ends at the $ END keyword. When processing a file, it'll check for all the keys starting from YOURKEYNAME0 and adding one to 
+that number until it can't find any more keys. Inside a FORKEY, you can use %% as a way to tell templ8 to put the iteration number there. This can be used in tags ##LIKE-THIS%%##.
 
 See:
 	help repl8ce
