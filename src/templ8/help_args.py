@@ -167,8 +167,10 @@ See:
 
 A FORKEY is a type of key that tells templ8 to duplicate part of the template if several variations of a repl8ce tag are present. The repl8ce tags can be used as notmal tags as well.
 
-A FORKEY starts with the $ FOR YOURKEYNAME, and ends at the $ END keyword. When processing a file, it'll check for all the keys starting from YOURKEYNAME0 and adding one to 
-that number until it can't find any more keys. Inside a FORKEY, you can use %% as a way to tell templ8 to put the iteration number there. This can be used in tags ##LIKE-THIS%%##.
+A FORKEY starts with the $ FOR YOURKEYNAME [ITERVAR], and ends at the $ END keyword. When processing a file, it'll check for all the keys starting from YOURKEYNAME0 and adding one to 
+that number until it can't find any more keys. The ITERVAR is an Iteration Variable: a single-letter variable name that you can use inside a forkey to set some part of the file to the current iteration depth. This can be used even inside tags.
+
+Iteration variables allow for better control of nested FORs.
 
 See:
 	help repl8ce
