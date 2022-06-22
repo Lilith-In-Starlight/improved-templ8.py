@@ -80,6 +80,12 @@ def mod_replaces(input_replaces, header):
 				input_replaces[current_multikey] += keyval[0] + "\n"
 			elif not keyval[0] == "":
 				raise Exception("what")
+	
+	for i in input_replaces:
+		if i.startswith("TX-"):
+			input_replaces[i] = parse_content(input_replaces[i], ".textile")
+		elif i.startswith("MD-"):
+			input_replaces[i] = parse_content(input_replaces[i], ".md")
 
 
 def parse_content(content, ext):
@@ -111,10 +117,10 @@ class Token:
 		return (self.end == other.end and self.start == other.start)
 
 tokens = [
-	("if", re.compile(r"\$ ?IF (NOT )?[A-Z0-9-_%]+")),
-	("for", re.compile(r"\$ ?FOR [A-Z0-9-_%]+")),
-	("end", re.compile(r"\$ ?END")),
-	# ("tag", re.compile(r"\#\# ?[A-Z0-9-_%]+ ?(\#\#)?")),
+	("if", re.compile(r"(?<!\\)\$ ?IF (NOT )?[A-Z0-9-_%]+")),
+	("for", re.compile(r"(?<!\\)\$ ?FOR [A-Z0-9-_%]+ [A-Z]")),
+	("end", re.compile(r"(?<!\\)\$ ?END")),
+	("tag", re.compile(r"(?<!\\)\#\# ?[A-Z0-9-_%]+ ?(\#\#)?")),
 ]
 
 openers = ["if", "for"]
@@ -161,17 +167,28 @@ def parts(input_base):
 	return all_lexes
 
 
-def funkeys(input_base, keys, tokens, iter_depth=-1):
+def funkeys(input_base, keys, tokens, iter_depth=-1, iter_variables = {}):
 	out = ""
 	iter = 0
 	
 	while iter < len(tokens):
 		tok = tokens[iter]
-		ttext = tok.text(input_base).replace("%%", str(iter_depth))
+		ttext = tok.text(input_base)
+		
+		# Replace all the %A iteration variables
+		for i in iter_variables:
+			ttext = ttext.replace("%"+i, str(iter_variables[i]))
+			
 		if tok.type == "put":
 			out += ttext.lstrip().rstrip()
+		if tok.type == "tag":
+			tagley = ttext.replace("##", "").lstrip().rstrip()
+			if tagley in keys and tagley != "CONTENT":
+				out += keys[tagley]
+			elif tagley == "CONTENT":
+				out += ttext
 		elif tok.type == "if":
-			clex = ttext.replace("$IF", "").lstrip().rstrip().replace("%%", str(iter_depth))
+			clex = ttext.replace("$IF", "").lstrip().rstrip()
 			clex = clex.replace("$ IF", "").lstrip().rstrip()
 			do = False
 			if clex.startswith("NOT"):
@@ -190,8 +207,10 @@ def funkeys(input_base, keys, tokens, iter_depth=-1):
 						break
 					iter += 1
 		elif tok.type == "for":
-			clex = ttext.replace("$ FOR", "").lstrip().rstrip().replace("%%", str(iter_depth))
+			clex = ttext.replace("$ FOR", "").lstrip().rstrip()
 			clex = clex.replace("$FOR", "").lstrip().rstrip()
+			itervar = clex.split(" ")[1]
+			clex = clex.split(" ")[0]
 			opens = 0
 			it2 = iter+1
 			fit = 0
@@ -204,7 +223,7 @@ def funkeys(input_base, keys, tokens, iter_depth=-1):
 					break
 				it2 += 1
 			while f"{clex}{fit}" in keys and keys[f"{clex}{fit}"] != "":
-				out += funkeys(input_base, keys, tokens[iter+1:it2], fit)
+				out += funkeys(input_base, keys, tokens[iter+1:it2], fit, {itervar: fit, **iter_variables})
 				fit += 1
 			iter = it2-1
 		iter += 1
@@ -247,15 +266,6 @@ def full_parse(state, file_content, file_extension, file_headers, dir_replace):
 	
 	# Put the content in the base HTML
 	contents = into_html(contents, filerepl, state)
-	
-	# Put the keys there
-	for key in filerepl:
-		if key.startswith("TX-"):
-			contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".textile"))
-		elif key.startswith("MD-"):
-			contents = contents.replace("##"+key+"##", parse_content(filerepl[key], ".md"))
-		else:
-			contents = contents.replace("##"+key+"##", filerepl[key])
 	
 	return contents
 
