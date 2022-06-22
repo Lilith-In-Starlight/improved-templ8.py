@@ -257,8 +257,7 @@ def into_html(content, keys, state):
 def full_parse(state, file_content, file_extension, file_headers, dir_replace):
 	# Process repl8ce
 	filerepl = state.replacements.copy()
-	for i in dir_replace:
-		filerepl[i] = dir_replace[i]
+	filerepl.update(dir_replace)
 	mod_replaces(filerepl, file_headers)
 	
 	# Turn the content into HTML
