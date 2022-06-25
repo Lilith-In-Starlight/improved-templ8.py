@@ -4,10 +4,10 @@ from templ8.blessing import mod_replaces
 
 class ProgramState:
 	def __init__(self):
-		self.deity_path = r"d8y"
-		self.basehtml_path = r"basehtml"
-		self.replacements_path = r"repl8ce"
-		self.txignore_path = r"txignore"
+		self.deity_path = r".d8y"
+		self.basehtml_path = r"base.html"
+		self.replacements_path = r".repl8ce"
+		self.txignore_path = r".txignore"
 		self.replacements = {}
 
 		self.input_folder = r"input"
