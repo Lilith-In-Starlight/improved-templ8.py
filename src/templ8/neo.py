@@ -13,8 +13,8 @@ def login():
 def neo():
 	state = ps.ProgramState()
 	last_change_list = {}
-	if os.path.exists("chlist"):
-		for i in open("chlist", "r").readlines():
+	if os.path.exists(".chlist"):
+		for i in open(".chlist", "r").readlines():
 			spl = i.split("<<")
 			if len(spl) != 2:
 				continue
@@ -51,7 +51,7 @@ def neo():
 	new_change_text = ""
 	for p in new_change_list:
 		new_change_text += f"{p}<<{new_change_list[p]}\n"
-	open("chlist", "w").write(new_change_text)
+	open(".chlist", "w").write(new_change_text)
 	print(finalprint)
 	for i in fls:
 		response = requests.post(

@@ -67,7 +67,7 @@ def mod_replaces(input_replaces, header):
 			keyval = i.split("=", 1)
 		# If we're not processing multilines, and the current line is single line, set key
 		if len(keyval) == 2 and not multiline:
-			input_replaces[keyval[0]] = keyval[1].replace(r"\n", "\n")
+			input_replaces[keyval[0]] = keyval[1].replace("\\n", "\n")
 		# If it's not a valid single line
 		elif len(keyval) == 1:
 			# If it's a valid multiline, start a new multiline tag
@@ -186,7 +186,7 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 			ttext = ttext.replace("%"+i, str(iter_variables[i]))
 			
 		if tok.type == "put":
-			out += ttext.replace(r"\##", "##").replace(r"\$", "$").replace(r"\$", "$").replace("\n\n", "\n")
+			out += ttext.replace("\\##", "##").replace("\\$", "$").replace("\\$", "$").replace("\n\n", "\n")
 		if tok.type == "tag":
 			tagley = ttext.replace("##", "").lstrip().rstrip()
 			if tagley in keys and tagley != "CONTENT":

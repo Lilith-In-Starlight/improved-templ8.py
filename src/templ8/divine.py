@@ -5,8 +5,6 @@ from pathlib import Path
 import templ8.programstate
 from templ8.blessing import makedir
 from templ8.blessing import mod_replaces
-from templ8.blessing import parse_content
-from templ8.blessing import into_html
 from templ8.blessing import full_parse
 import time
 
@@ -15,12 +13,14 @@ def divine():
 	# Load the state of the program (important files and stuff)
 	state = templ8.programstate.ProgramState()
 	last_change_list = {}
-	if os.path.exists("chlist"):
-		for i in open("chlist", "r").readlines():
+	new_change_list = {}
+	if os.path.exists(".chlistd"):
+		for i in open(".chlistd", "r").readlines():
 			spl = i.split("<<")
 			if len(spl) != 2:
 				continue
 			last_change_list[Path(spl[0])] = float(spl[1])
+			new_change_list[Path(spl[0])] = float(spl[1])
 	
 	finalprint = ""
 	for subdir, dirs, files in os.walk(state.input_folder):
@@ -30,11 +30,18 @@ def divine():
 			makedir(path)
 		
 		dir_replace = {}
+		dirpl8_ch = False
 		# Find a global repl8ce thing
 		if "repl8ce" in files:
-			path = os.path.join(subdir, "repl8ce")
+			path = Path(os.path.join(subdir, "repl8ce"))
 			mod_replaces(dir_replace, open(path, "r").read())
-		
+			if path in last_change_list:
+				if last_change_list[path] != os.stat(path).st_mtime:
+					new_change_list[path] = os.stat(path).st_mtime
+					dirpl8_ch = True
+			else:
+				new_change_list[path] = os.stat(path).st_mtime
+					
 		# Process the files
 		for file in files:
 			path = os.path.join(subdir, file)
@@ -68,19 +75,45 @@ def divine():
 					if os.path.join(state.input_folder, os.path.normpath(i)) == path or os.path.join(state.input_folder, os.path.normpath(i)) == subdir:
 						in_txignore = True
 						break
-					  
+					
 				
 				if not in_txignore:
-					contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
+					npath = Path(path)
+					origin_last_time = os.stat(npath).st_mtime
+					recorded_last_time = -1
+					if npath in last_change_list:
+						recorded_last_time = last_change_list[npath]
+					
+					temp = state.replacements.copy()
+					temp.update(dir_replace)
+					mod_replaces(temp, file_headers)
+					cbasech = False
+					
+					cbkpath = Path(state.basehtml_path)
+					if "CUSTOMBASE" in temp:
+						cbkpath = Path(temp["CUSTOMBASE"])
+						
+					if os.path.exists(cbkpath):
+						if cbkpath in last_change_list:
+							if last_change_list[cbkpath] != os.stat(cbkpath).st_mtime:
+								new_change_list[cbkpath] = os.stat(cbkpath).st_mtime
+								cbasech = True
+						else:
+							new_change_list[cbkpath] = os.stat(cbkpath).st_mtime
+							cbasech = True
+								
+					
+					if recorded_last_time != origin_last_time or cbasech or dirpl8_ch:
+						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
+						new_change_list[npath] = origin_last_time
+					else:
+						continue
 					
 					if os.path.exists(outhtml):
 						contents = contents.replace("#!CDATE!#", time.ctime(os.path.getctime(outhtml)))
 					else:
 						contents = contents.replace("#!CDATE!#", time.ctime(time.time()))
-					
-					if contents == current_content:
-						continue
-					
+										
 					finalprint += outhtml + "\n"
 					with open(outhtml, "w") as f:
 						f.write(contents)
@@ -98,6 +131,11 @@ def divine():
 				finalprint += outpath + "\n"
 				shutil.copy(path, outpath)
 		
+	
+	new_change_text = ""
+	for p in new_change_list:
+		new_change_text += f"{p}<<{new_change_list[p]}\n"
+	open(".chlistd", "w").write(new_change_text)
 	
 	print(finalprint)
 
