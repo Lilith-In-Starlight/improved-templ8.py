@@ -9,7 +9,7 @@ from templ8.blessing import full_parse
 import time
 
 # Divines a website
-def divine():
+def divine(force=False):
 	# Load the state of the program (important files and stuff)
 	state = templ8.programstate.ProgramState()
 	last_change_list = {}
@@ -102,8 +102,7 @@ def divine():
 							new_change_list[cbkpath] = os.stat(cbkpath).st_mtime
 							cbasech = True
 								
-					
-					if recorded_last_time != origin_last_time or cbasech or dirpl8_ch:
+					if recorded_last_time != origin_last_time or cbasech or dirpl8_ch or force:
 						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
 						new_change_list[npath] = origin_last_time
 					else:

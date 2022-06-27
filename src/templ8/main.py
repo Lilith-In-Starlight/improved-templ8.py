@@ -51,7 +51,10 @@ def main():
 		else:
 			help()
 	elif sys.argv[1] == "divine":
-		divine()
+		if len(sys.argv) < 3:
+			divine()
+		elif sys.argv[2] == "--force":
+			divine(True)
 	elif sys.argv[1] == "radio":
 		radio()
 	elif sys.argv[1] == "pandoc":

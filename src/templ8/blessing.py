@@ -4,6 +4,8 @@ import pypandoc
 import time
 import re
 
+pextra = ["-f", "markdown-smart"]
+
 TEMPL8_ASCII = """
 	###																	
 	###																  ###
@@ -92,7 +94,7 @@ def parse_content(content, ext):
 	if ext == ".textile":
 		return textile.textile(content)
 	elif ext == ".md":
-		return pypandoc.convert_text(content, "html5", format="md")
+		return pypandoc.convert_text(content, "html5", format="md", extra_args=pextra)
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
 		return ""
