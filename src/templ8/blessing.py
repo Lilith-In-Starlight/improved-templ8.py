@@ -3,6 +3,7 @@ import textile
 import pypandoc
 import time
 import re
+import pykami
 
 pextra = ["-f", "markdown-smart"]
 
@@ -88,6 +89,8 @@ def mod_replaces(input_replaces, header):
 			input_replaces[i] = parse_content(input_replaces[i], ".textile")
 		elif i.startswith("MD-"):
 			input_replaces[i] = parse_content(input_replaces[i], ".md")
+		elif i.startswith("KM-"):
+			input_replaces[i] = parse_content(input_replaces[i], ".km")
 
 
 def parse_content(content, ext):
@@ -95,6 +98,8 @@ def parse_content(content, ext):
 		return textile.textile(content)
 	elif ext == ".md":
 		return pypandoc.convert_text(content, "html5", format="md", extra_args=pextra)
+	elif ext == ".km":
+		return kami.parse(content)
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
 		return ""
