@@ -50,7 +50,7 @@ def divine(force=False):
 			outhtml = outpath.replace(file_extension, ".html", -1)
 			
 			# Only process textile and md files
-			if file_extension in [".textile", ".md"]:
+			if file_extension in [".textile", ".md", ".km"]:
 				current_content = ""
 				if os.path.exists(outhtml):
 					current_content = open(outhtml, "r").read()
