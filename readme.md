@@ -4,7 +4,7 @@ templ8 is a templating software for websites designed with lightweightness, flex
 
 The previous version, which I call templ8.0 was extremely tedious to use and designed only for me. This one is an improvement in those regards (not that it being designed for my own projects makes it bad, but it'd be cool to make it generalizable).
 
-It uses [textile](textile-lang.org) and Markdown. It detects which format you want to use by checking the files' extensions.
+It supports [Textile](textile-lang.org), [Kami](github.com/lilith-in-starlight/kami-parser) and Markdown. It detects which format you want to use by checking the files' extensions.
 
 It's currently being made, so I don't expect this to be functional or fully usable. And the code is bad. It will probably remain bad, but I'll try to make it okay over time.
 
