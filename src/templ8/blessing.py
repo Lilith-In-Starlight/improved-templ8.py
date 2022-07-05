@@ -127,7 +127,7 @@ tokens = [
 	("if", re.compile(r"(?<!\\)\$ ?IF (NOT )?[A-Z0-9-_%]+")),
 	("for", re.compile(r"(?<!\\)\$ ?FOR [A-Z0-9-_%]+ [A-Z]")),
 	("end", re.compile(r"(?<!\\)\$ ?END")),
-	("tag", re.compile(r"(?<!\\)\#\# ?[A-Z0-9-_%]+ ?(\#\#)?")),
+	("tag", re.compile(r"(?<!\\)\#\#[A-Z0-9-_%]+ ?(\#\#)?")),
 ]
 
 openers = ["if", "for"]
