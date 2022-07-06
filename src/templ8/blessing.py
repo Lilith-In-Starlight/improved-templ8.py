@@ -44,9 +44,9 @@ PAGETITLE=Blog"""
 
 DEF_INPUT = "input"
 DEF_OUTPUT = "output"
-DEITY_PATH = "d8y"
-DEF_BASEHTML_PATH = "basehtml"
-DEF_REPLACE_PATH = "repl8ce"
+DEITY_PATH = ".d8y"
+DEF_BASEHTML_PATH = "base.html"
+DEF_REPLACE_PATH = ".repl8ce"
 
 
 # Checks if a directory exists and make it if not

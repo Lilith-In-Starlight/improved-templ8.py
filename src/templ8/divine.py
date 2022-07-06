@@ -15,7 +15,7 @@ def divine(force=False):
 	last_change_list = {}
 	new_change_list = {}
 	if os.path.exists(".chlistd"):
-		for i in open(".chlistd", "r").readlines():
+		for i in open(".chlistd", "r", encoding="utf-8").readlines():
 			spl = i.split("<<")
 			if len(spl) != 2:
 				continue
@@ -34,7 +34,7 @@ def divine(force=False):
 		# Find a global repl8ce thing
 		if "repl8ce" in files:
 			path = Path(os.path.join(subdir, "repl8ce"))
-			mod_replaces(dir_replace, open(path, "r").read())
+			mod_replaces(dir_replace, open(path, "r", encoding="utf-8").read())
 			if path in last_change_list:
 				if last_change_list[path] != os.stat(path).st_mtime:
 					new_change_list[path] = os.stat(path).st_mtime
@@ -53,11 +53,11 @@ def divine(force=False):
 			if file_extension in [".textile", ".md", ".km"]:
 				current_content = ""
 				if os.path.exists(outhtml):
-					current_content = open(outhtml, "r").read()
+					current_content = open(outhtml, "r", encoding="utf-8").read()
 						
 				contents = ""
 				# Get the headers and the content
-				file_split = open(path, "r").read().split("-BEGINFILE-",1)
+				file_split = open(path, "r", encoding="utf-8").read().split("-BEGINFILE-",1)
 				file_headers = ""
 				file_content = ""
 				if len(file_split) >= 2:
@@ -114,13 +114,13 @@ def divine(force=False):
 						contents = contents.replace("#!CDATE!#", time.ctime(time.time()))
 										
 					finalprint += outhtml + "\n"
-					with open(outhtml, "w") as f:
+					with open(outhtml, "w", encoding="utf-8") as f:
 						f.write(contents)
 					
 					
 				else:
 					finalprint += outpath + "\n"
-					with open(outpath, "w") as f:
+					with open(outpath, "w", encoding="utf-8") as f:
 						f.write(file_content)
 					
 			else:
@@ -134,7 +134,7 @@ def divine(force=False):
 	new_change_text = ""
 	for p in new_change_list:
 		new_change_text += f"{p}<<{new_change_list[p]}\n"
-	open(".chlistd", "w").write(new_change_text)
+	open(".chlistd", "w", encoding="utf-8").write(new_change_text)
 	
 	print(finalprint)
 
