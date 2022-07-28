@@ -99,7 +99,9 @@ def parse_content(content, ext):
 	elif ext == ".md":
 		return pypandoc.convert_text(content, "html5", format="md", extra_args=pextra)
 	elif ext == ".km":
-		return pykami.parse(content)
+		val = pykami.parse(content);
+		print(val[1]);
+		return val[0]
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
 		return ""
