@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import textile
 import pypandoc
 import time
@@ -126,13 +127,15 @@ class Token:
 		return (self.end == other.end and self.start == other.start)
 
 tokens = [
-	("if", re.compile(r"(?<!\\)\$ ?IF (NOT )?[A-Z0-9-_%]+")),
-	("for", re.compile(r"(?<!\\)\$ ?FOR [A-Z0-9-_%]+ [A-Z]")),
-	("end", re.compile(r"(?<!\\)\$ ?END")),
+	("if", re.compile(r"(?<!\\)\$ ?IF (NOT )?[A-Z0-9-_%]+( ?\$?)")),
+	("plug", re.compile(r"(?<!\\)\$ ?PLUG [A-Z0-9-_%.]+( ?\$?)")),
+	("pl", re.compile(r"(?<!\\)\$ ?PL [A-Z0-9-_%.]+( ?\$?)")),
+	("for", re.compile(r"(?<!\\)\$ ?FOR [A-Z0-9-_%]+ [A-Z]( ?\$?)")),
+	("end", re.compile(r"(?<!\\)\$ ?END( ?\$?)")),
 	("tag", re.compile(r"(?<!\\)\#\#[A-Z0-9-_%]+ ?(\#\#)?")),
 ]
 
-openers = ["if", "for"]
+openers = ["if", "for", "plug"]
 
 
 def get_charpos(i, str):
@@ -171,7 +174,7 @@ def parts(input_base):
 		elif i.type == "end":
 			if opens == []:
 				errpos = get_charpos(i.start, input_base)
-				print(f"ERROR: UNEXPECTED END OF BLOCK AT ({errppos[0]}; {errpos[1]})")
+				print(f"ERROR: UNEXPECTED END OF BLOCK AT ({errpos[0]}; {errpos[1]})")
 				close()
 			else:
 				opens.pop(-1)
@@ -219,6 +222,47 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 					if opens == 0:
 						break
 					iter += 1
+		elif tok.type == "plug":
+			clex = ttext.replace("$ PLUG", "").lstrip().rstrip()
+			clex = clex.replace("$PLUG", "").lstrip().rstrip()
+			clex = clex.replace("$", "").lstrip().rstrip()
+			pluginpath = Path.home().joinpath("pl8g").joinpath(clex.lower()).joinpath("main.py")
+			plugindir = Path.home().joinpath("pl8g").joinpath(clex.lower())
+			opens = 0
+			itc = iter+1
+			body = ""
+			for subtok in tokens[iter:]:
+				if subtok.type in openers:
+					opens += 1
+				elif subtok.type == "end":
+					opens -= 1
+				if opens == 0:
+					break
+				itc += 1
+			body = funkeys(input_base, keys, tokens[iter+1:itc], iter_variables)
+			plugglobals = {
+				'output': body,
+				'plugdir': plugindir,
+				'plugpat': pluginpath,
+			}
+			exec(open(pluginpath, 'r').read(), plugglobals)
+			out += plugglobals["output"]
+			iter = itc-1
+
+		elif tok.type == "pl":
+			clex = ttext.replace("$ PL", "").lstrip().rstrip()
+			clex = clex.replace("$PL", "").lstrip().rstrip()
+			clex = clex.replace("$", "").lstrip().rstrip()
+			pluginpath = Path.home().joinpath("pl8g").joinpath(clex.lower()).joinpath("main.py")
+			plugindir = Path.home().joinpath("pl8g").joinpath(clex.lower())
+			plugglobals = {
+				'output': '',
+				'plugdir': plugindir,
+				'plugpat': pluginpath,
+			}
+			exec(open(pluginpath, 'r').read(), plugglobals)
+			out += plugglobals["output"]
+
 		elif tok.type == "for":
 			clex = ttext.replace("$ FOR", "").lstrip().rstrip()
 			clex = clex.replace("$FOR", "").lstrip().rstrip()
