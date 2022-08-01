@@ -168,6 +168,19 @@ PAGETITLE=Blog
 #### i want a file to have a separate basehtml
 Just add set your file's value of the `CUSTOMBASE` key to the path to your new basehtml. You don't need to set up this key in repl8ce.
 
+## The Plugin System
+Yes, templ8 has a plugin system. It's very barebones for now and it's not as powerful as I wish it was, but it allows for even more control over the output files. **They are extremely unsafe to use, I am not doin anything in the task of making them safer, you should *always* verify that whatever your computer is running can be trusted, even if it's just a plugin for a silly templating software. I'm not responsible for anything that a plugin does.**
+
+There are two kinds of plugins, those who take a body and those who don't. The ones who take a body work like this: `$PLUG PLUGNAME$ body $END$`.
+
+The ones who don't, work like this: `$PL PLUGNAME$`.
+
+Plugins are python scripts. They are stored in `~/pl8g/`. The two previous plugins will look, specifically, for `~/pl8g/plugname/main.py` and run whatever code is in `main.py`.
+
+Plugins are exposed to three globals that are given by templ8: `output`, `plugdir` and `plugpath`. The output starts out as the body of the plugin call (or as an empty string, in case there's no body) and templ8 reads its value afterwards to put it in the final file. The other two are, respectively, the path of the plugin's directory, so that you can look for files in the same directory, and the plugin's `main.py`, just because having it felt important. In the future, I wish to also give it information about the file that is currently being parsed.
+
+Plugins are capable of doing anything a regular python script can. This is both a strength and pretty dangerous. It is not hard to make a malicious plugin, so you should always check the code you're running before actually running it. It's the same risk you take when you install a program in your computer.
+
 ## Versioning
 *Or, roxy how the fuck am i supposed to tell which of these is newest*
 
