@@ -193,7 +193,7 @@ def parts(input_base):
 	return all_lexes
 
 
-def funkeys(input_base, keys, tokens, fie_data, iter_variables = {}):
+def funkeys(input_base, keys, tokens, file_data, iter_variables = {}):
 	out = ""
 	iter = 0
 	
@@ -247,11 +247,12 @@ def funkeys(input_base, keys, tokens, fie_data, iter_variables = {}):
 				if opens == 0:
 					break
 				itc += 1
-			body = funkeys(input_base, keys, tokens[iter+1:itc], fie_data, iter_variables)
+			body = funkeys(input_base, keys, tokens[iter+1:itc], file_data, iter_variables)
 			plugglobals = {
 				'output': body,
 				'plugdir': plugindir,
-				'plugpat': pluginpath,
+				'plugpath': pluginpath,
+				'filepath': file_data.path,
 			}
 			exec(open(pluginpath, 'r').read(), plugglobals)
 			out += plugglobals["output"]
@@ -266,7 +267,8 @@ def funkeys(input_base, keys, tokens, fie_data, iter_variables = {}):
 			plugglobals = {
 				'output': '',
 				'plugdir': plugindir,
-				'plugpat': pluginpath,
+				'plugpath': pluginpath,
+				'filepath': file_data.path,
 			}
 			exec(open(pluginpath, 'r').read(), plugglobals)
 			out += plugglobals["output"]
@@ -288,7 +290,7 @@ def funkeys(input_base, keys, tokens, fie_data, iter_variables = {}):
 					break
 				it2 += 1
 			while f"{clex}{fit}" in keys and keys[f"{clex}{fit}"] != "":
-				out += funkeys(input_base, keys, tokens[iter+1:it2], fie_data, {itervar: fit, **iter_variables})
+				out += funkeys(input_base, keys, tokens[iter+1:it2], file_data, {itervar: fit, **iter_variables})
 				fit += 1
 			iter = it2-1
 		iter += 1

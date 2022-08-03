@@ -47,9 +47,9 @@ def radio():
 		
 		for file in sortedfiles:
 			path = os.path.join(subdir, file)
-            file_data_thing = FileData()
-            file_data_thing.path = path
-            file_extension = os.path.splitext(path)[1]
+			file_data_thing = FileData()
+			file_data_thing.path = path
+			file_extension = os.path.splitext(path)[1]
 			file_replace = state.replacements
 			# These refer to the individual articles
 			file_headers = open(path, "r").read().split("-BEGINFILE-", 1)[0]
