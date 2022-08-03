@@ -3,6 +3,7 @@ import textile
 import templ8.programstate
 import templ8.blessing
 from templ8.blessing import makedir
+from templ8.blessing import FileData
 from templ8.blessing import mod_replaces
 from templ8.blessing import parse_content
 from templ8.blessing import parse_keys
