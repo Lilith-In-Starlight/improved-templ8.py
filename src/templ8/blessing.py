@@ -253,6 +253,7 @@ def funkeys(input_base, keys, tokens, file_data, iter_variables = {}):
 				'plugdir': plugindir,
 				'plugpath': pluginpath,
 				'filepath': file_data.path,
+				'repl8ce': keys,
 			}
 			exec(open(pluginpath, 'r').read(), plugglobals)
 			out += plugglobals["output"]
@@ -269,6 +270,7 @@ def funkeys(input_base, keys, tokens, file_data, iter_variables = {}):
 				'plugdir': plugindir,
 				'plugpath': pluginpath,
 				'filepath': file_data.path,
+				'repl8ce': keys,
 			}
 			exec(open(pluginpath, 'r').read(), plugglobals)
 			out += plugglobals["output"]
