@@ -1,6 +1,7 @@
 import os
 from templ8.blessing import makedir
 from templ8.blessing import mod_replaces
+from templ8.blessing import FileData
 
 class ProgramState:
 	def __init__(self):
@@ -59,7 +60,9 @@ class ProgramState:
 		# Load the replacements from repl8ce
 		if os.path.exists(self.replacements_path):
 			replacement_text = open(self.replacements_path, "r").read()
-			mod_replaces(self.replacements, replacement_text)
+			file_data_thing = FileData()
+			file_data_thing.path = self.replacements_path
+			mod_replaces(self.replacements, replacement_text, file_data_thing)
 		else:
 			print("WARNING: No " + self.replacements_path + " file found, continuing")
 

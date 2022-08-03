@@ -46,14 +46,16 @@ def radio():
 		
 		for file in sortedfiles:
 			path = os.path.join(subdir, file)
-			file_extension = os.path.splitext(path)[1]
+            file_data_thing = FileData()
+            file_data_thing.path = path
+            file_extension = os.path.splitext(path)[1]
 			file_replace = state.replacements
 			# These refer to the individual articles
 			file_headers = open(path, "r").read().split("-BEGINFILE-", 1)[0]
 			file_content = open(path, "r").read().split("-BEGINFILE-", 1)[1]
 			
 			# Get the replace keys of the individual article
-			mod_replaces(file_replace, file_headers)
+			mod_replaces(file_replace, file_headers, file_data_thing)
 			
 			# This variable refers to the article page with the contents of this individual file
 			article_page = article_format_page
@@ -61,7 +63,7 @@ def radio():
 			# Apply the file's keys to the article page and put in the content
 			article_page = article_page.replace("##CONTENT##", file_content)
 			
-			parse_keys(article_page, file_replace)
+			parse_keys(article_page, file_replace, file_data_thing)
 			
 			
 			
@@ -70,22 +72,22 @@ def radio():
 			article_page_content = article_page.split("-BEGINFILE-")[1]
 			
 			
-			mod_replaces(file_replace, article_page_headers)
+			mod_replaces(file_replace, article_page_headers, file_data_thing)
 			
 			# This variable is the final page
 			final_page = state.basehtml_content
 			
 			# Apply the keys of the article page and put in the content
-			final_page = final_page.replace("##CONTENT##", parse_content(article_page_content, file_extension))
+			final_page = final_page.replace("##CONTENT##", parse_content(article_page_content, file_extension, file_data_thing))
 			
 			# (This var is for the index page, it takes the format and puts the info in)			
-			current_file_index = textile.textile(parse_content(article_format_index.replace("##INTRO##", file_replace["INTRO"]), file_extension))
+			current_file_index = textile.textile(parse_content(article_format_index.replace("##INTRO##", file_replace["INTRO"]), file_extension, file_data_thing))
 			
 			
 			current_file_index = current_file_index.replace("##LINK##", 'posts/' + file.replace(".textile", "/index.html"))
 			
-			final_page = parse_keys(final_page, file_replace)
-			current_file_index = parse_keys(current_file_index, file_replace)
+			final_page = parse_keys(final_page, file_replace, file_data_thing)
+			current_file_index = parse_keys(current_file_index, file_replace, file_data_thing)
 			
 			final_page = final_page.replace("#!DATE!#", time.ctime(time.time()))
 			current_file_index = current_file_index.replace("#!DATE!#", time.ctime(time.time()))
@@ -111,7 +113,7 @@ def radio():
 	
 	# Generate the index
 	blog_replace = state.replacements.copy()
-	mod_replaces(blog_replace, blog_replacekeys)
+	mod_replaces(blog_replace, blog_replacekeys, file_data_thing)
 	
 	index_html = state.basehtml_content
 	if "CUSTOMBASE" in blog_replace:

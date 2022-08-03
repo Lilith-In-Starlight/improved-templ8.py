@@ -4,6 +4,7 @@ import textile
 from pathlib import Path
 import templ8.programstate
 from templ8.blessing import makedir
+from templ8.blessing import FileData
 from templ8.blessing import mod_replaces
 from templ8.blessing import full_parse
 import time
@@ -31,10 +32,12 @@ def divine(force=False):
 		
 		dir_replace = {}
 		dirpl8_ch = False
+		file_data_thing = FileData()
+		file_data_thing.path = subdir
 		# Find a global repl8ce thing
 		if "repl8ce" in files:
 			path = Path(os.path.join(subdir, "repl8ce"))
-			mod_replaces(dir_replace, open(path, "r", encoding="utf-8").read())
+			mod_replaces(dir_replace, open(path, "r", encoding="utf-8").read(), file_data_thing)
 			if path in last_change_list:
 				if last_change_list[path] != os.stat(path).st_mtime:
 					new_change_list[path] = os.stat(path).st_mtime
@@ -45,6 +48,7 @@ def divine(force=False):
 		# Process the files
 		for file in files:
 			path = os.path.join(subdir, file)
+			file_data_thing.path = path
 			file_extension = os.path.splitext(path)[1]
 			outpath = path.replace(state.input_folder, state.output_folder, 1)
 			outhtml = outpath.replace(file_extension, ".html", -1)
@@ -86,7 +90,7 @@ def divine(force=False):
 					
 					temp = state.replacements.copy()
 					temp.update(dir_replace)
-					mod_replaces(temp, file_headers)
+					mod_replaces(temp, file_headers, file_data_thing)
 					cbasech = False
 					
 					cbkpath = Path(state.basehtml_path)
@@ -103,7 +107,7 @@ def divine(force=False):
 							cbasech = True
 								
 					if recorded_last_time != origin_last_time or cbasech or dirpl8_ch or force:
-						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace)
+						contents = full_parse(state, file_content, file_extension, file_headers, dir_replace, file_data_thing)
 						new_change_list[npath] = origin_last_time
 					else:
 						continue

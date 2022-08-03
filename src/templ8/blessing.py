@@ -6,6 +6,11 @@ import time
 import re
 import pykami
 
+class FileData:
+	def __init__(self):
+		self.path = Path("")
+
+
 pextra = ["-f", "markdown-smart"]
 
 TEMPL8_ASCII = """
@@ -59,7 +64,7 @@ def makedir(path, warning = ""):
 
 
 # Processes the repl8ce of a header
-def mod_replaces(input_replaces, header):
+def mod_replaces(input_replaces, header, file_data):
 	# These variables are used for multiline keys
 	current_multikey = "" # The current key being edited
 	multiline = False
@@ -87,21 +92,24 @@ def mod_replaces(input_replaces, header):
 	
 	for i in input_replaces:
 		if i.startswith("TX-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".textile")
+			input_replaces[i] = parse_content(input_replaces[i], ".textile", file_data)
 		elif i.startswith("MD-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".md")
+			input_replaces[i] = parse_content(input_replaces[i], ".md", file_data)
 		elif i.startswith("KM-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".km")
+			input_replaces[i] = parse_content(input_replaces[i], ".km", file_data)
 
 
-def parse_content(content, ext):
+def parse_content(content, ext, file_data):
 	if ext == ".textile":
 		return textile.textile(content)
 	elif ext == ".md":
 		return pypandoc.convert_text(content, "html5", format="md", extra_args=pextra)
 	elif ext == ".km":
 		val = pykami.parse(content);
-		print(val[1]);
+		while val[1].find("\n\n") != -1:
+			val[1] = val[1].replace("\n\n", "\n")
+		if val[1] != "\n" and val[1] != "":
+			print(f"In {file_data.path}: " + val[1])
 		return val[0]
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
@@ -185,7 +193,7 @@ def parts(input_base):
 	return all_lexes
 
 
-def funkeys(input_base, keys, tokens, iter_variables = {}):
+def funkeys(input_base, keys, tokens, fie_data, iter_variables = {}):
 	out = ""
 	iter = 0
 	
@@ -239,7 +247,7 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 				if opens == 0:
 					break
 				itc += 1
-			body = funkeys(input_base, keys, tokens[iter+1:itc], iter_variables)
+			body = funkeys(input_base, keys, tokens[iter+1:itc], fie_data, iter_variables)
 			plugglobals = {
 				'output': body,
 				'plugdir': plugindir,
@@ -280,14 +288,14 @@ def funkeys(input_base, keys, tokens, iter_variables = {}):
 					break
 				it2 += 1
 			while f"{clex}{fit}" in keys and keys[f"{clex}{fit}"] != "":
-				out += funkeys(input_base, keys, tokens[iter+1:it2], {itervar: fit, **iter_variables})
+				out += funkeys(input_base, keys, tokens[iter+1:it2], fie_data, {itervar: fit, **iter_variables})
 				fit += 1
 			iter = it2-1
 		iter += 1
 	return out
 
 
-def into_html(content, keys, state):
+def into_html(content, keys, state, file_data):
 	# By default, use the default base
 	base = state.basehtml_content
 	# Use a custombase if it's specified
@@ -295,7 +303,7 @@ def into_html(content, keys, state):
 		if os.path.exists(keys["CUSTOMBASE"]):
 			base = open(keys["CUSTOMBASE"], "r").read()
 		else:
-			raise Exception(os.path.join(subdir, file) + " uses a CUSTOMBASE that doesn't exist")
+			raise Exception(file_data.path + " uses a CUSTOMBASE that doesn't exist")
 	
 	# Put the content in the file
 	base = base.replace("##CONTENT##", content)
@@ -306,37 +314,37 @@ def into_html(content, keys, state):
 	# Tokenize for function keys and apply them
 	tokens = parts(base)
 	if len(tokens) != 0:
-		base = funkeys(base, keys, tokens)
+		base = funkeys(base, keys, tokens, file_data)
 	
 	return base
 
 
-def full_parse(state, file_content, file_extension, file_headers, dir_replace):
+def full_parse(state, file_content, file_extension, file_headers, dir_replace, file_data):
 	# Process repl8ce
 	filerepl = state.replacements.copy()
 	filerepl.update(dir_replace)
-	mod_replaces(filerepl, file_headers)
+	mod_replaces(filerepl, file_headers, file_data)
 	
 	# Turn the content into HTML
-	contents = parse_content(file_content, file_extension)
+	contents = parse_content(file_content, file_extension, file_data)
 	
 	# Put the content in the base HTML
-	contents = into_html(contents, filerepl, state)
+	contents = into_html(contents, filerepl, state, file_data)
 	
 	return contents
 
 
-def parse_keys(page, keys):
+def parse_keys(page, keys, file_data):
 	base = page
 	tokens = parts(base)
 	if len(tokens) != 0:
-		base = funkeys(base, keys, tokens)
+		base = funkeys(base, keys, tokens, file_data)
 	
 	for key in keys:
 		if key.startswith("TX-"):
-			base = base.replace("##"+key+"##", parse_content(keys[key], ".textile"))
+			base = base.replace("##"+key+"##", parse_content(keys[key], ".textile", file_data))
 		elif key.startswith("MD-"):
-			base = base.replace("##"+key+"##", parse_content(keys[key], ".md"))
+			base = base.replace("##"+key+"##", parse_content(keys[key], ".md", file_data))
 		else:
 			base = base.replace("##"+key+"##", keys[key])
 	
