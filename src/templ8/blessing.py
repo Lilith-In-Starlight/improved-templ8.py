@@ -5,6 +5,7 @@ import pypandoc
 import time
 import re
 import pykami
+import sys
 
 class FileData:
 	def __init__(self):
@@ -183,13 +184,13 @@ def parts(input_base, file_data):
 			if opens == []:
 				errpos = get_charpos(i.start, input_base)
 				print(f"ERROR: UNEXPECTED END OF BLOCK AT ({errpos[0]}; {errpos[1]}) IN {file_data.path}")
-				close()
+				sys.exit()
 			else:
 				opens.pop(-1)
 	if opens != []:
 		errpos = get_charpos(opens[-1].start, input_base)
 		print(f"ERROR: UNCLOSED {opens[-1].type.upper()} AT ({errpos[0]}; {errpos[1]}) IN {file_data.path}")
-		close()
+		sys.exit()
 	return all_lexes
 
 
