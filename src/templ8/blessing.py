@@ -109,7 +109,7 @@ def parse_content(content, ext, file_data):
 		while val[1].find("\n\n") != -1:
 			val[1] = val[1].replace("\n\n", "\n")
 		if val[1] != "\n" and val[1] != "":
-			print(f"In {file_data.path}: " + val[1])
+			print(f"[KAMI WARNING] In {file_data.path}:" + val[1])
 		return val[0]
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
@@ -156,7 +156,7 @@ def get_charpos(i, str):
 			return (j + 1, i-last_pos-j+1)
 
 
-def parts(input_base):
+def parts(input_base, file_data):
 	all_lexes = []
 	last_end = 0
 	while True:
@@ -182,13 +182,13 @@ def parts(input_base):
 		elif i.type == "end":
 			if opens == []:
 				errpos = get_charpos(i.start, input_base)
-				print(f"ERROR: UNEXPECTED END OF BLOCK AT ({errpos[0]}; {errpos[1]})")
+				print(f"ERROR: UNEXPECTED END OF BLOCK AT ({errpos[0]}; {errpos[1]}) IN {file_data.path}")
 				close()
 			else:
 				opens.pop(-1)
 	if opens != []:
 		errpos = get_charpos(opens[-1].start, input_base)
-		print(f"ERROR: UNCLOSED {opens[-1].type.upper()} AT ({errpos[0]}; {errpos[1]})")
+		print(f"ERROR: UNCLOSED {opens[-1].type.upper()} AT ({errpos[0]}; {errpos[1]}) IN {file_data.path}")
 		close()
 	return all_lexes
 
@@ -316,7 +316,7 @@ def into_html(content, keys, state, file_data):
 	base = base.replace("#!DATE!#", time.ctime(time.time()))
 	
 	# Tokenize for function keys and apply them
-	tokens = parts(base)
+	tokens = parts(base, file_data)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens, file_data)
 	
@@ -340,7 +340,7 @@ def full_parse(state, file_content, file_extension, file_headers, dir_replace, f
 
 def parse_keys(page, keys, file_data):
 	base = page
-	tokens = parts(base)
+	tokens = parts(base, file_data)
 	if len(tokens) != 0:
 		base = funkeys(base, keys, tokens, file_data)
 	
