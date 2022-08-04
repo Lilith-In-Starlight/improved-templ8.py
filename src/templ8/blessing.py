@@ -109,7 +109,7 @@ def parse_content(content, ext, file_data):
 		while val[1].find("\n\n") != -1:
 			val[1] = val[1].replace("\n\n", "\n")
 		if val[1] != "\n" and val[1] != "":
-			print(f"[KAMI WARNING] In {file_data.path}:" + val[1])
+			print(f"[KAMI WARNING] In {file_data.path}: " + val[1])
 		return val[0]
 	else:
 		raise Exception("Can't recognize the extension in " + os.join(subdir, file))
