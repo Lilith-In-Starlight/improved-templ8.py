@@ -106,7 +106,7 @@ def parse_content(content, ext, file_data):
 	elif ext == ".md":
 		return pypandoc.convert_text(content, "html5", format="md", extra_args=pextra)
 	elif ext == ".km":
-		val = pykami.parse(content);
+		val = pykami.parse(content)
 		while val[1].find("\n\n") != -1:
 			val[1] = val[1].replace("\n\n", "\n")
 		if val[1] != "\n" and val[1] != "":

@@ -60,7 +60,10 @@ def main():
 	elif sys.argv[1] == "pandoc":
 		pandoc()
 	elif sys.argv[1] == "neo":
-		neo()
+		if len(sys.argv) < 3:
+			neo()
+		elif sys.argv[2] == "--force":
+			neo(True)
 	elif sys.argv[1] == "genesis":
 		if len(sys.argv) >= 3:
 			genesis(sys.argv[2])

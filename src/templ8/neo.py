@@ -7,10 +7,18 @@ import templ8.programstate as ps
 def login():
 	loginpath = Path.home() / ".templ8rc"
 	lines = open(loginpath, "r").readlines()
-	return lines[0].rstrip()
+	for i in lines:
+		line = i.split("=", 1)
+		if len(line) == 2:
+			directory_path = os.getcwd()
+			folder_name = os.path.basename(directory_path)
+			if line[0] == f"{folder_name}_key":
+				return line[1].rstrip()
+	print("Couldn't find API ey in ~/.templ8rc")
+	close()
 	
 
-def neo():
+def neo(force=False):
 	state = ps.ProgramState()
 	last_change_list = {}
 	if os.path.exists(".chlist"):
@@ -34,7 +42,7 @@ def neo():
 				from_root = Path(*path.parts[1:])
 				
 				current_last_change = os.stat(path).st_mtime
-				if path in last_change_list:
+				if path in last_change_list and not force:
 					if float(last_change_list[path]) == float(current_last_change):
 						continue
 				finalprint += f"{path}\n"
