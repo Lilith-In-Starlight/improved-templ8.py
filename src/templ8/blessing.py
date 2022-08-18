@@ -91,13 +91,14 @@ def mod_replaces(input_replaces, header, file_data):
 			elif not keyval[0] == "":
 				raise Exception("what")
 	
-	for i in input_replaces:
+	new_input_rel = input_replaces.copy()
+	for i in new_input_rel:
 		if i.startswith("TX-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".textile", file_data)
+			input_replaces[i.lstrip("TX-")] = parse_content(input_replaces[i], ".textile", file_data)
 		elif i.startswith("MD-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".md", file_data)
+			input_replaces[i.lstrip("MD-")] = parse_content(input_replaces[i], ".md", file_data)
 		elif i.startswith("KM-"):
-			input_replaces[i] = parse_content(input_replaces[i], ".km", file_data)
+			input_replaces[i.lstrip("KM-")] = parse_content(input_replaces[i], ".km", file_data)
 
 
 def parse_content(content, ext, file_data):

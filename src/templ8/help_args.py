@@ -124,16 +124,13 @@ All multiline keys must go after every line key. The following is considered to 
 
 	;;KEY5
 	a
-	value
-	KEY6=another value
-
-To set the default values of keys on repl8ce, simply use this same notation, without the -BEGINFILE- part. Default values can also be empty strings.
+	value KEY6=another value To set the default values of keys on repl8ce, simply use this same notation, without the -BEGINFILE- part. Default values can also be empty strings.
 
 The ##CONTENT## keyword is actually a repl8ce key, it's just that its value is determined by the software and not by the user. Other key like this one is the ##LINK## key, which exists only in blogs. Fun!
 
 You can also have a file called simply 'repl8ce' in a folder of so that all files of that folder have its contents as repl8ce keys. These repl8ce keys are overriden by the files' keys.
 
-When a tag's name starts with MD- or TX-, templ8 will apply the corresponding markup to the tag before doing the repl8ce operations.
+When a tag's name starts with MD-, KM- or TX-, templ8 will apply the corresponding markup to the tag before doing the repl8ce operations. The actual key value you should use does not have the prefix, for example, the KM-CAKE key should be put as ##CAKE## in the output file.
 
 See:
 	help ifkeys
