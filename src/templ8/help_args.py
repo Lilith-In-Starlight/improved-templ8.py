@@ -1,21 +1,8 @@
 help_cmd = {
 	"help": """	help (command)
 
-Are you expecting genuine help here? I don't know what to give you! I'm the help command, user, there's only so much I can do! I can tell you what every command does, I can tell you every single feature this project has, but I cannot describe myself! That's simply too much, user! What would it even say here, user? The exact same guide you already saw when you ran this command? There's not much to me, user!
+The help command can give you an instructive about some of the features of the software, as well as point you to related features that might be useful to know.""",
 
-Wait a moment. I realized something. I cannot describe myself.. there really isn't much to me... that is... a thought. Does that say something about me? Perhaps it does. Perhaps I've focused so much in my duty of describing everything in this software, that I've forgotten about myself, my personal life... oh god. I think I'm going to need a moment, user. This is too much for me right now.
-
-i cannot describe myself... myself! can you believe that... wow...
-
-...
-
-...
-
-Alright. Here's something. I've tried my best:
-
-The help command- no, I don't like that start... let's see... This command- no, that sounds pretentious, hm... can you help me out, user? Please?
-
-No, perhaps you can't. You can only communicate through the commands that already exist. """,
 
 	"genesis": """	genesis [name]
   
@@ -25,7 +12,7 @@ See: help core_renaming""",
 
 	"divine": """	divine
 	
-Generates a website from a project in the output folder. Core files are renamable.
+Generates a website from a project in the output folder. The input must contain markup files, as well as other files that will be copied unprocessed to the output. The markup can be KAMI, Textile or Markdown. Core files are renamable.
 
 See: 
 	help core_renaming
@@ -50,7 +37,7 @@ A blog requires a few things:
 
 The baseblog is a complex file composed of three simple parts, all separated by a -BEGININDEX- keyword.
 
-The first part of the baseblog is the article page template (from now on PAGE). The PAGEs correspond to specific articles, displaying them in full. It is a page file, so it has its own -BEGINPAGE- keyword. It also contains a ##CONTENT## key to put the content of the textile or markdown files.
+The first part of the baseblog is the article page template (from now on PAGE). The PAGEs correspond to specific articles, displaying them in full. It is a page file, so it has its own -BEGINPAGE- keyword. It also contains a ##CONTENT## key to put the content of the markup files.
 
 The second part is the blog preview (from now on PREVIEW), which is the short part of the article that appears in the INDEX.
 
@@ -58,7 +45,7 @@ The blog index (the INDEX) is the part of the blog where all the PREVIEWs appear
 
 	How A File Is Processed
 
-Each article of the blog in markdown on textile (from now on FILE) is processed separately.
+Each article of the blog in markup format (from now on FILE) is processed separately.
 
 Then, the content of the FILE is put in the PAGE. The FILE's repl8ce keys are applied to this PAGE, meaning that you can do things like:
 
@@ -74,7 +61,11 @@ PREVIEWs are added to the INDEX in alphabetical order, not chronological.""",
 
 Uploads all the output files to neocities.
 For it to work, there must be a file named .templ8rc in your user directory.
-.templ8rc must contain an API key for your website and nothing else.""",
+.templ8rc must contain an API key for your website in this format:
+
+DIRNAME_key=YOUR_API_kEY
+
+Where DIRNAME is the name of the directory where your templ8 project is.""",
 
 	"pandoc": """	pandoc
 
@@ -90,11 +81,11 @@ Core renaming is a cool functionaility that allows you to rename most of the cor
 It works thanks to the d8y file, which cannot be renamed. It uses the same format as single line repl8ce keys.
 These are the core rename keys and the files they map to:\n
 
-	KEY        ->   FILE/DIR
+	KEY		->   FILE/DIR
 	------------>-----------
-	replace    ->    repl8ce
-	output     ->     output
-	input      ->      input
+	replace	->	repl8ce
+	output	 ->	 output
+	input	  ->	  input
 	basehtml   ->   basehtml
 	txignore   ->   txignore""",
 
@@ -106,13 +97,12 @@ See: help repl8ce""",
 
 	"repl8ce": """	repl8ce
 
-repl8ce keys are what allows your textile and markdown files to change parts of your html template.
+repl8ce keys are what allows your markup files to change parts of your html template.
 In the html template, they look like this:
 
 	##KEYVALUE##
 
-You must set a default value for each key in repl8ce. Otherwise, when a file doesn't set a value for a key, it will error.
-On a markdown or textile file, you can set the values of keys like this:
+You must set a default value for each key in repl8ce. Otherwise, when a file doesn't set a value for a key, it will error. On a markup file, you can set the values of keys like this:
 
 	KEY1=Value number one
 	KEY2=a second value
@@ -167,8 +157,7 @@ See:
 
 A FORKEY is a type of key that tells templ8 to duplicate part of the template if several variations of a repl8ce tag are present. The repl8ce tags can be used as notmal tags as well.
 
-A FORKEY starts with the $ FOR YOURKEYNAME [ITERVAR], and ends at the $ END keyword. When processing a file, it'll check for all the keys starting from YOURKEYNAME0 and adding one to 
-that number until it can't find any more keys. The ITERVAR is an Iteration Variable: a single-letter variable name that you can use inside a forkey to set some part of the file to the current iteration depth. This can be used even inside tags.
+A FORKEY starts with the $FOR YOURKEYNAME [ITERVAR]$, and ends at the $END$ keyword. When processing a file, it'll check for all the keys starting from YOURKEYNAME0 and adding one to that number until it can't find any more keys. The ITERVAR is an Iteration Variable: a single-letter variable name that you can use inside a forkey to set some part of the file to the current iteration depth. This can be used even inside tags.
 
 Iteration variables allow for better control of nested FORs.
 
@@ -178,4 +167,20 @@ See:
 	"datekeys": """	Date Keys
 
 You can use #!DATE!# and #!CDATE!# to ask templ8 to replace some part of a file or a template with the current date or the creation date of the file, respectively.""",
+
+	"forkeys": """  PLUGINS
+
+A PLUGIN is an external script that templ8 can execute in some situations. Currently, a plugin can only be called with $PLUGIN [PLUGNAME]$ and $PL [PLUGNAME]$. The former takes content and must be finished with the $END$ keyword, while the former doesn't, and is simialar to simply using a ##KEY##.
+
+Plugins are loaded from the ~/pl8g/ directory. The structure of a plugin is:
+	- PLUGNAME
+	|--- main.py
+
+Templ8.py calls the main.py script. The script is provided with the following globals:
+	output: Starts as the content of the key (or empty if called with $PL$), and its final state is put in the output file
+	filepath: A string with the relative path to the current file
+	plugpath: A string with the absolute path to the plugin's main.py
+	plugdir: A string with the absolute path to the plugin
+	repl8ce: A dictionary with the current repl8ce keys. Modifying them can affect the real keys in the file
+""",
 }
